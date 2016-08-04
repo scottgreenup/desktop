@@ -1,0 +1,5 @@
+#!/bin/bash
+
+(echo "..." | dzen2 -p 4 -x "1520" -y "30" -w "400" -l 1 -sa 'l' -ta 'c' -title-name 'popup_sysinfo' -e 'onstart=uncollapse;button1=exit;button3=exit' -fn "inconsolata:size=11") &
+sudo /usr/bin/pacman -Sy
+/home/scott/bin/de_pacman | dzen2 -p -x "1520" -y "30" -w "400" -l `/home/scott/bin/de_pacman wc` -sa 'c' -ta 'c' -title-name 'popup_sysinfo' -e 'onstart=uncollapse;button1=exit;button3=exit' -fn "inconsolata:size=11"

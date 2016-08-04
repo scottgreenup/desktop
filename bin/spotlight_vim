@@ -1,0 +1,9 @@
+#!/bin/bash
+
+findresult=`find ~/ | sed 's/ /\\ /g' | dmenu_theme bright`
+
+if [[ -n "$findresult" ]]
+then
+    urxvt -e\
+        bash -c "vim $findresult -c \"silent ! ~/.config/base16-shell/base16-tomorrow.dark.sh\""
+fi

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#CMD="trayer --align center --width 10% --edge bottom --height 64 --distance 400 --tint 0x00ff00 --alpha 0 --transparent false "
+CMD="trayer --edge bottom --align center --width 10% --expand true --transparent true --alpha 0 --heighttype pixel --height 24 --padding 1 --tint 0x555555"
+
+if [ $(pidof trayer) ] ; then
+    killall trayer -u $USER
+else
+    $CMD &
+fi

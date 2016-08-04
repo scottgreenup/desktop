@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]; then
+    echo "Change MAC Address"
+    echo "usage: $0 mac_address"
+    exit
+fi
+
+interface="wlp3s0"
+
+ip link set dev ${interface} down
+sleep 1
+ip link set dev ${interface} address "$1"
+sleep 1
+ip link set dev ${interface} up
+
+ip link show ${interface}
+

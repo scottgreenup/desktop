@@ -1,0 +1,2 @@
+#!/bin/bash
+chromium --class="gmail" --no-proxy-server "https://mail.google.com"

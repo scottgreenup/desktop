@@ -1,0 +1,45 @@
+#!/bin/python2
+
+# Just like a traceroute but does a geoiplookup on each node inbetween.
+
+from subprocess import Popen
+from subprocess import PIPE
+
+import sys
+
+if len(sys.argv) < 2:
+    print "usage:", sys.argv[0], "target_ip"
+    sys.exit(1)
+
+target = sys.argv[1]
+
+print "performing traceroute...\n"
+x = Popen("sudo traceroute -I {}".format(target), shell=True, stdout=PIPE).stdout.read()
+
+splat = x.split('\n')
+splat = splat[2:]
+
+for i in splat:
+
+    if "* * *" in i:
+        print "* * *"
+        print ""
+        continue
+
+    if "(" not in i:
+        continue
+
+    ip =  i.split("(")[1].split(")")[0]
+    hostname = i.split(" ")
+
+    for j in hostname:
+        if "." in j:
+            hostname = j
+            break
+
+    print "IPv4:", ip
+    print "HOSTNAME:", hostname
+
+    geo = Popen("geoiplookup " + ip, shell=True, stdout=PIPE).stdout.read()
+
+    print geo

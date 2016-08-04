@@ -1,0 +1,32 @@
+#!/bin/python
+
+import os
+import sys
+
+p = os.popen('/usr/bin/pacman -Qu', 'r')
+
+ls = []
+i = 0
+j = 0
+
+while 1:
+    line = p.readline()
+
+    if not line:
+        break;
+    else:
+        splat = (line[:-1]).split(' ')
+        ls.append(splat)
+        if len(splat[0]) > i:
+            i = len(splat[0])
+
+        if len(splat[3]) > j:
+            j = len(splat[3])
+
+if (len(sys.argv) == 1):
+    print("")
+    for x in ls: 
+        print(format(x[0], ">" + str(i + 1)) + " - " + format(x[3], "<" + str(j + 1)));
+else:
+    print(len(ls))
+

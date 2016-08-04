@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# missing sync = msync
+
+# This may seem like it works just like rsync or scp, but this just does a diff
+# on the files. If a file in the target directory is not the same as a file in
+# the source directory, it doesn't matter; it will not be copied.
+
+filetype="CR2"
+
+source=$1
+destination=$2
+
+echo "source = $source"
+echo "destination = $destination"
+read -n1 -r -p "Would you like to continue? (y/N) " key
+
+echo ""
+
+if [ "$key" != 'y' ]; then
+    echo "bye"
+    exit
+fi
+
+echo "copying..."
+
+s="/tmp/s${RANDOM}"
+d="/tmp/d${RANDOM}"
+
+ls -1 "${source}" | grep -e "${filetype}$" | sort > "$s"
+ls -1 "${destination}" | grep -e "${filetype}$" | sort > "$d"
+
+diff $s $d | grep "<" | sed -e 's/< //' | xargs -I % cp -v "${source}%" ${destination}
+
