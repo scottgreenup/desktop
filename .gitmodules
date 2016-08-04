@@ -13,3 +13,6 @@
 [submodule "submodules/github.com/pangloss/vim-javascript"]
 	path = submodules/github.com/pangloss/vim-javascript
 	url = https://github.com/pangloss/vim-javascript.git
+[submodule "submodules/github.com/chriskempson/base16-shell"]
+	path = submodules/github.com/chriskempson/base16-shell
+	url = https://github.com/chriskempson/base16-shell.git
