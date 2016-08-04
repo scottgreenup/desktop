@@ -1,0 +1,34 @@
+#!/usr/bin/python2
+
+import dbus
+import sys
+
+def run():
+    colors = {}
+    colors['Paused']  = '#FF0000'
+    colors['Playing'] = '#00FF00'
+
+    try:
+        bus = dbus.SessionBus()
+        spotify_bus = bus.get_object('org.mpris.MediaPlayer2.spotify', '/org/mpris/MediaPlayer2')
+        spotify = dbus.Interface(spotify_bus, 'org.freedesktop.DBus.Properties')
+
+        play_state = spotify.Get('org.mpris.MediaPlayer2.Player', 'PlaybackStatus')
+        info = spotify.Get('org.mpris.MediaPlayer2.Player', 'Metadata')
+
+        track = info['xesam:title'].encode("UTF-8")[0:100];
+
+        if len(sys.argv) == 1:
+            print track
+            return
+
+        if sys.argv[1] == "xmobar":
+            print "<fc={}>{}</fc>".format(colors[play_state], track)
+            return
+        else:
+            print track
+            return
+    except Exception as e:
+        print "No Current Track"
+
+run()

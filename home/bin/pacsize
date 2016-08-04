@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+
+import os
+import subprocess as sp
+import sys
+import re
+
+def tobytes(val):
+    val = val.split(' ')
+    n = float(val[0])
+
+    if val[1] == "B":
+        return n
+    if val[1] == "KiB":
+        return n * 1024
+    if val[1] == "MiB":
+        return n * 1024 * 1024
+    if val[1] == "GiB":
+        return n * 1024 * 1024 * 1024
+
+    print(val[1])
+
+    return None
+
+class Package:
+    def __init__(self):
+        self.name = None
+        self.size = None
+        pass
+
+    def __repr__(self):
+        return "{}: {}".format(self.name, self.size)
+
+    def __lt__(self, other):
+        return tobytes(self.size) < tobytes(other.size)
+
+    def __gt__(self, other):
+        return tobytes(self.size) > tobytes(other.size)
+
+
+if __name__ == "__main__":
+
+    proc = sp.run(["pacman", "-Q"], stdout=sp.PIPE)
+    packages = proc.stdout.decode('ascii').split('\n')
+    l = []
+    longest_name = ""
+
+    for line in packages:
+        if len(line) == 0:
+            continue
+
+        name = line.split(' ')[0]
+        proc = sp.run(["pacman", "-Qi", name], stdout=sp.PIPE)
+        lines = proc.stdout.decode('utf-8').split('\n')
+
+        package = Package()
+
+        for kv in lines:
+            splat = kv.split(':')
+            if len(splat) == 1:
+                continue
+
+            k = splat[0].strip()
+            v = splat[1].strip()
+
+            if k == "Name":
+                package.name = v
+                if len(package.name) > len(longest_name):
+                    longest_name = package.name
+                continue
+            if k == "Installed Size":
+                package.size = v
+                continue
+
+        l.append(package)
+    l.sort(reverse=True)
+
+    for x in l:
+        print("{}: {}".format(
+            x.name.ljust(len(longest_name) + 1),
+            x.size)
+        )
+

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+x=$(cat <<EOF
+302-00:13:5e:0b:1e:8d
+402-00:13:5e:0b:1e:b6
+EOF
+)
+
+echo $x | grep $1 | awk -F "-" '{print $2}'
+
+sudo ifconfig eth0 down
+
+sudo ifconfig eth0 hw ether `echo $x | grep $1 | awk -F "-" '{print $2}'`
+
+sudo ifconfig eth0 up
+sudo dhclient eth0

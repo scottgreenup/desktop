@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export PATH="$PATH:$HOME/bin"
+
+# LightDM does xmodmap for us
+#[[ -f ~/.xmodmaprc ]] && xmodmap ~/.Xmodmap
+
+# LightDM does .Xresources for us
+#[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+
+[[ -f ~/.screenlayout/main.sh ]] && ~/.screenlayout/main.sh
+
+urxvtd -q -o -f &

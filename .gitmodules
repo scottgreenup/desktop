@@ -1,0 +1,15 @@
+[submodule "submodule/vim-pathogen"]
+	path = submodules/github.com/tpope/vim-pathogen
+	url = https://github.com/tpope/vim-pathogen.git
+[submodule "github.com/chriskempson/base16-vim"]
+	path = submodules/github.com/chriskempson/base16-vim
+	url = https://github.com/chriskempson/base16-vim
+[submodule "submodules/github.com/scrooloose/nerdtree"]
+	path = submodules/github.com/scrooloose/nerdtree
+	url = https://github.com/scrooloose/nerdtree.git
+[submodule "submodules/github.com/ntpeters/vim-better-whitespace"]
+	path = submodules/github.com/ntpeters/vim-better-whitespace
+	url = https://github.com/ntpeters/vim-better-whitespace.git
+[submodule "submodules/github.com/pangloss/vim-javascript"]
+	path = submodules/github.com/pangloss/vim-javascript
+	url = https://github.com/pangloss/vim-javascript.git

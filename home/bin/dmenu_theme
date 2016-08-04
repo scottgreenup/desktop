@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+
+import re
+import subprocess as sp
+
+import sys
+
+cp = sp.run(['xrandr'], stdout=sp.PIPE)
+lines = cp.stdout.decode('ascii').split('\n')
+
+resreg = re.compile('\d+x\d+')
+
+if len(sys.argv) > 1:
+    theme = sys.argv[1]
+else:
+    theme = 'bright'
+
+for line in lines:
+    if 'DVI-I-1 connected' in line:
+        m = resreg.search(line)
+        res = line[m.span()[0]:m.span()[1]]
+        res = res.strip().split('x')
+        w = int(res[0])
+        h = int(res[1])
+
+        dw = int(w * 0.6)
+        dx = int((w - dw) / 2)
+        dy = 200
+
+        css = {}
+
+        css['original'] = ['#1B1D1E', '#80D4FF', '#333333', '#FFFFFF'];
+        css['bright'] = ['#373B41', '#DE935F', '#81A2BE', '#000000'];
+        css['yellow'] = ['#373B41', '#B5BD68', '#81A2BE', '#000000'];
+
+        sp.Popen(['dmenu',
+            '-i',
+            '-l',  '20',
+            '-nb', css[theme][0],
+            '-nf', css[theme][1],
+            '-sb', css[theme][2],
+            '-sf', css[theme][3],
+            '-p',  "",
+            '-f',
+            '-i',
+            '-fn', "Inconsolata:size=13",
+            '-h',  '5',
+            '-w',  str(dw),
+            '-x',  str(dx),
+            '-y',  '200'
+        ], stdin=sys.stdin)
+
