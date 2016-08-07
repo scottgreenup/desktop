@@ -72,3 +72,13 @@ ln -s "${cwd}/home/vim" "/home/$(whoami)/.vim"
 [[ -e ~/.vimrc ]] && rm ~/.vimrc
 ln -s "${cwd}/home/vimrc" "/home/$(whoami)/.vimrc"
 #===============================================================================
+
+ln -sf "${cwd}/home/config/awesome/rc.lua" "/home/$(whoami)/.config/awesome/rc.lua"
+ln -sf "${cwd}/bin" "/home/$(whoami)/bin"
+
+ln -sf "${cwd}/home/xmodmaprc" "/home/$(whoami)/.Xmodmap"
+ln -sf "${cwd}/home/xprofile" "/home/$(whoami)/.xprofile"
+ln -sf "${cwd}/home/bashrc" "/home/$(whoami)/.bashrc"
+ln -sf "${cwd}/home/Xresources" "/home/$(whoami)/.Xresources"
+
+sudo ln -sf "${cwd}/usr/share/awesome/themes/xathereal" "/usr/share/awesome/themes/xathereal"

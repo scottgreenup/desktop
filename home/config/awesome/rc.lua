@@ -14,7 +14,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 
-local scratch = require("scratch")
+--local scratch = require("scratch")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -251,13 +251,13 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
-    awful.key({ "Mod4",           }, "i", function ()
-        scratch.drop("spotify", "center", "center", 0.8, 0.8)
-    end),
+    --awful.key({ "Mod4",           }, "i", function ()
+    --    scratch.drop("spotify", "center", "center", 0.8, 0.8)
+    --end),
 
-    awful.key({ "Mod4",           }, "k", function ()
-        scratch.drop("keepassx2", "center", "center", 0.8, 0.8)
-    end),
+    --awful.key({ "Mod4",           }, "k", function ()
+    --    scratch.drop("keepassx2", "center", "center", 0.8, 0.8)
+    --end),
 
     awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.03)    end),
     awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.03)    end),
