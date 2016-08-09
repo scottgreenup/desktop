@@ -2,11 +2,19 @@
 
 export PATH="$PATH:$HOME/bin"
 
+killall pulseaudio; pulseaudio &
+
+xsetroot -cursor_name left_ptr
+
 # LightDM does xmodmap for us
 #[[ -f ~/.xmodmaprc ]] && xmodmap ~/.Xmodmap
 
 # LightDM does .Xresources for us
 #[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
+
+[[ "$(which xscreensaver)" == "/usr/bin/xscreensaver" ]] && xscreensaver -no-splash &
+
+[[ "$(which nm-applet)" == "/usr/bin/nm-applet" ]] && nm-applet &
 
 [[ -f ~/.screenlayout/main.sh ]] && ~/.screenlayout/main.sh
 

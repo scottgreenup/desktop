@@ -1,6 +1,7 @@
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
+
 awful.rules = require("awful.rules")
 require("awful.autofocus")
 
@@ -13,6 +14,8 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+
+local assault = require("assault")
 
 --local scratch = require("scratch")
 
@@ -48,6 +51,12 @@ beautiful.init("/usr/share/awesome/themes/xathereal/theme.lua")
 -- This is used later as the default terminal and editor to run.
 browser = "chromium"
 terminal = "urxvt"
+
+programs = {}
+programs["browser"]  = "chromium"
+programs["terminal"] = "urxvt"
+programs["lock"]     = "xscreensaver-command --lock"
+
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -99,7 +108,7 @@ end
 -- {{{ Menu
 -- Create a laucher widget and a main menu
 myawesomemenu = {
-   { "manual", terminal .. " -e man awesome" },
+   { "manual", programs["terminal"] .. " -e man awesome" },
    { "edit config", editor_cmd .. " " .. awesome.conffile },
    { "restart", awesome.restart },
    { "quit", awesome.quit }
@@ -108,7 +117,7 @@ myawesomemenu = {
 mymainmenu = awful.menu({
     items = {
         { "awesome", myawesomemenu, beautiful.awesome_icon },
-                { "open terminal", terminal }
+                { "open terminal", programs["terminal"] }
         }
     }
 )
@@ -117,12 +126,27 @@ mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
                                      menu = mymainmenu })
 
 -- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+menubar.utils.terminal = programs["terminal"] -- Set the terminal for applications that require it
 -- }}}
 
 -- {{{ Wibox
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
+widget_batt0 = assault({
+    battery = "BAT0",
+    critical_level = 0.15,
+    critical_color = "#FF0000",
+    charging_color = "#00FF00",
+    height = 8,
+})
+
+widget_batt1 = assault({
+    battery = "BAT1",
+    critical_level = 0.15,
+    critical_color = "#FF0000",
+    charging_color = "#00FF00",
+    height = 8,
+})
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -204,6 +228,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
+    right_layout:add(widget_batt0)
+    right_layout:add(widget_batt1)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -244,10 +270,10 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey,           }, "s", function () awful.screen.focus(awful.screen.getbycoord(960, 540)) end),
     awful.key({ modkey,           }, "d", function () awful.screen.focus(awful.screen.getbycoord(2880, 540)) end),
-    awful.key({ modkey,           }, "f", function () awful.screen.focus(awful.screen.getbycoord(4800, 540)) end), 
+    awful.key({ modkey,           }, "f", function () awful.screen.focus(awful.screen.getbycoord(4800, 540)) end),
     -- Standard program
-    awful.key({ modkey,           }, "w", function () awful.util.spawn(browser) end),
-    awful.key({ modkey, "Shift"   }, "Return", function () awful.util.spawn(terminal) end),
+    awful.key({ modkey,           }, "w", function () awful.util.spawn(programs["browser"]) end),
+    awful.key({ modkey, "Shift"   }, "Return", function () awful.util.spawn(programs["terminal"]) end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -258,6 +284,8 @@ globalkeys = awful.util.table.join(
     --awful.key({ "Mod4",           }, "k", function ()
     --    scratch.drop("keepassx2", "center", "center", 0.8, 0.8)
     --end),
+
+    awful.key({ "Mod4",           }, "l", function () awful.util.spawn(programs["lock"]) end),
 
     awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.03)    end),
     awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.03)    end),

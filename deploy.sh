@@ -1,32 +1,6 @@
 #!/usr/bin/env bash
 
-#pacman -S\
-#    awesome\
-#    lightdm\
-#    lightdm-webkit-theme-material-git\
-#    lightdm-webkit2-greeter\
-#    vim\
-#    xorg-server\
-#    xf86-video-ati\
-#    xf86-video-intel\
-#    xf86-video-nouveau\
-#    xf86-video-vesa
-
-# Window Manager
-#mkdir -p ~/.config/awesome
-#ln -s ./home/config/awesome/rc.lua ~/.config/awesome/rc.lua
-#
-## Home directory dotfiles
-#ln -s ./home/bashrc ~/.bashrc
-#ln -s ./home/bin ~/bin
-#ln -s ./home/vim ~/.vim
-#ln -s ./home/vimrc ~/.vimrc
-#ln -s ./home/xresources ~/.Xresources
-#ln -s ./home/xmodmaprc ~/.Xmodmap
-#ln -s ./home/xprofile ~/.xprofile
-#
-## /etc
-#sudo ln -s ./etc/lightdm/lightdm.conf /etc/lightdm/lightdm.conf
+git submodule update --init --recursive
 
 cwd=$(pwd)
 
@@ -73,12 +47,31 @@ ln -s "${cwd}/home/vim" "/home/$(whoami)/.vim"
 ln -s "${cwd}/home/vimrc" "/home/$(whoami)/.vimrc"
 #===============================================================================
 
-ln -sf "${cwd}/home/config/awesome/rc.lua" "/home/$(whoami)/.config/awesome/rc.lua"
-ln -sf "${cwd}/bin" "/home/$(whoami)/bin"
+hm="/home/$(whoami)"
 
-ln -sf "${cwd}/home/xmodmaprc" "/home/$(whoami)/.Xmodmap"
-ln -sf "${cwd}/home/xprofile" "/home/$(whoami)/.xprofile"
-ln -sf "${cwd}/home/bashrc" "/home/$(whoami)/.bashrc"
-ln -sf "${cwd}/home/Xresources" "/home/$(whoami)/.Xresources"
+if [[ ! -e "${hm}/.config/awesome" ]]; then
+    mkdir --parents "/home/$(whoami)/.config/awesome"
+fi
+ln -sf\
+    "${cwd}/home/config/awesome/rc.lua"\
+    "${hm}/.config/awesome/rc.lua"
+ln -sf\
+    "${cwd}/submodules/github.com/NuckChorris/assault/awesomewm/assault.lua"\
+    "${hm}/.config/awesome/assault.lua"
 
-sudo ln -sf "${cwd}/usr/share/awesome/themes/xathereal" "/usr/share/awesome/themes/xathereal"
+if [[ -h "${hm}/bin" ]]; then
+    rm -rf "${hm}/bin"
+    ln -sf "${cwd}/bin" "${hm}/bin"
+else
+    echo "${hm}/bin is not a symbolic link, please remove and re-run script."
+fi
+
+ln -sf "${cwd}/home/xmodmaprc"  "${hm}/.Xmodmap"
+ln -sf "${cwd}/home/xprofile"   "${hm}/.xprofile"
+ln -sf "${cwd}/home/bashrc"     "${hm}/.bashrc"
+ln -sf "${cwd}/home/Xresources" "${hm}/.Xresources"
+
+sudo ln -sf\
+    "${cwd}/usr/share/awesome/themes/xathereal"\
+    "/usr/share/awesome/themes/xathereal"
+
