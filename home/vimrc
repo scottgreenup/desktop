@@ -13,6 +13,9 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 " Toggle functionalities
 nmap <silent> <leader>n  :set nonu! <bar> set nornu!<CR>
 nmap <silent> <leader>p  :set nopaste!<CR>
+
+nmap <silent> <c-d>  :bnext<CR>
+nmap <silent> <c-a>  :bprevious<CR>
 "-------------------------------------------------------------------------------
 
 let g:snips_author='Scott Greenup'

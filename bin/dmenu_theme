@@ -16,7 +16,7 @@ else:
     theme = 'bright'
 
 for line in lines:
-    if 'DVI-I-1 connected' in line:
+    if ' connected' in line:
         m = resreg.search(line)
         res = line[m.span()[0]:m.span()[1]]
         res = res.strip().split('x')
@@ -49,4 +49,5 @@ for line in lines:
             '-x',  str(dx),
             '-y',  '200'
         ], stdin=sys.stdin)
+        break
 

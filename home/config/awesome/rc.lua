@@ -271,36 +271,50 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "s", function () awful.screen.focus(awful.screen.getbycoord(960, 540)) end),
     awful.key({ modkey,           }, "d", function () awful.screen.focus(awful.screen.getbycoord(2880, 540)) end),
     awful.key({ modkey,           }, "f", function () awful.screen.focus(awful.screen.getbycoord(4800, 540)) end),
+
     -- Standard program
     awful.key({ modkey,           }, "w", function () awful.util.spawn(programs["browser"]) end),
     awful.key({ modkey, "Shift"   }, "Return", function () awful.util.spawn(programs["terminal"]) end),
-    awful.key({ modkey, "Control" }, "r", awesome.restart),
-    awful.key({ modkey, "Shift"   }, "q", awesome.quit),
-
-    --awful.key({ "Mod4",           }, "i", function ()
-    --    scratch.drop("spotify", "center", "center", 0.8, 0.8)
-    --end),
-
-    --awful.key({ "Mod4",           }, "k", function ()
-    --    scratch.drop("keepassx2", "center", "center", 0.8, 0.8)
-    --end),
-
     awful.key({ "Mod4",           }, "l", function () awful.util.spawn(programs["lock"]) end),
 
-    awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.03)    end),
-    awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.03)    end),
-    awful.key({ modkey,           }, ",", function () awful.tag.incnmaster( 1)      end),
-    awful.key({ modkey,           }, ".", function () awful.tag.incnmaster(-1)      end),
-    awful.key({ modkey, "Control" }, "h", function () awful.tag.incncol( 1)         end),
-    awful.key({ modkey, "Control" }, "l", function () awful.tag.incncol(-1)         end),
-    awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts,  1) end),
-    awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
+    -- Awesome Control
+    awful.key({ modkey, "Control" }, "r", awesome.restart),
+    awful.key({ modkey, "Shift"   }, "q", awesome.quit),
+    awful.key({ modkey            }, "r", function () mypromptbox[mouse.screen]:run() end),
 
+    -- Window Control
+    awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.03) end),
+    awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.03) end),
+    awful.key({ modkey,           }, ",", function () awful.tag.incnmaster( 1) end),
+    awful.key({ modkey,           }, ".", function () awful.tag.incnmaster(-1) end),
+    awful.key({ modkey, "Control" }, "h", function () awful.tag.incncol( 1) end),
+    awful.key({ modkey, "Control" }, "l", function () awful.tag.incncol(-1) end),
+    awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts, 1) end),
+    awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
-    -- Prompt
-    awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
 
+
+    -- Audio Control
+    awful.key({}, "XF86AudioRaiseVolume", function()
+        awful.util.spawn("amixer set Master 10%+")
+    end),
+    awful.key({}, "XF86AudioLowerVolume", function()
+        awful.util.spawn("amixer set Master 10%-")
+    end),
+    awful.key({}, "XF86AudioMute", function()
+        awful.util.spawn("amixer sset Master toggle")
+    end),
+
+    -- Brightness
+    awful.key({}, "XF86MonBrightnessUp", function()
+        awful.util.spawn("xbacklight -inc 10")
+    end),
+    awful.key({}, "XF86MonBrightnessDown", function()
+        awful.util.spawn("xbacklight -dec 10")
+    end),
+
+    -- Prompt
     awful.key({ modkey }, "x",
               function ()
                   awful.prompt.run({ prompt = "Run Lua code: " },
@@ -308,8 +322,8 @@ globalkeys = awful.util.table.join(
                   awful.util.eval, nil,
                   awful.util.getdir("cache") .. "/history_eval")
               end),
-    -- Menubar
-    --awful.key({ modkey }, "p", function() menubar.show() end)
+
+    -- DMenu2
     awful.key({ modkey }, "p", function()
         local foci = client.focus
         local scr = nil
@@ -330,6 +344,7 @@ globalkeys = awful.util.table.join(
         awful.util.spawn(command)
     end),
 
+    -- DMenu for ViM
     awful.key({ modkey }, "o", function()
         local foci = client.focus
         local scr = nil
@@ -351,19 +366,17 @@ globalkeys = awful.util.table.join(
 )
 
 clientkeys = awful.util.table.join(
-    -- awful.key({ "Mod4",           }, "i",      function (c) scratch.pad.set(c, 0.8, 0.8)     end),
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ modkey,           }, "t",      awful.client.floating.toggle                     ),
     awful.key({ modkey,           }, "Return", function (c) c:swap(awful.client.getmaster()) end),
-    awful.key({ modkey, "Shift"   }, "s",      function (c) awful.client.movetoscreen(c, 0)  end),
-    awful.key({ modkey, "Shift"   }, "d",      function (c) awful.client.movetoscreen(c, 1)  end),
-    awful.key({ modkey, "Shift"   }, "f",      function (c) awful.client.movetoscreen(c, 2)  end),
+    awful.key({ modkey, "Shift"   }, "s", function (c) awful.client.movetoscreen(c, awful.screen.getbycoord(960, 540)) end),
+    awful.key({ modkey, "Shift"   }, "d", function (c) awful.client.movetoscreen(c, awful.screen.getbycoord(2880, 540)) end),
+    awful.key({ modkey, "Shift"   }, "f", function (c) awful.client.movetoscreen(c, awful.screen.getbycoord(4800, 540)) end),
+
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
     awful.key({ modkey,           }, "n",
         function (c)
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
             c.minimized = true
         end),
     awful.key({ modkey,           }, "m",

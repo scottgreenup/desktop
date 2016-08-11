@@ -66,12 +66,12 @@ else
     echo "${hm}/bin is not a symbolic link, please remove and re-run script."
 fi
 
-ln -sf "${cwd}/home/xmodmaprc"  "${hm}/.Xmodmap"
-ln -sf "${cwd}/home/xprofile"   "${hm}/.xprofile"
-ln -sf "${cwd}/home/bashrc"     "${hm}/.bashrc"
-ln -sf "${cwd}/home/Xresources" "${hm}/.Xresources"
+ln -sfT "${cwd}/home/xmodmaprc"  "${hm}/.Xmodmap"
+ln -sfT "${cwd}/home/xprofile"   "${hm}/.xprofile"
+ln -sfT "${cwd}/home/bashrc"     "${hm}/.bashrc"
+ln -sfT "${cwd}/home/Xresources" "${hm}/.Xresources"
 
-sudo ln -sf\
+sudo ln -sfT\
     "${cwd}/usr/share/awesome/themes/xathereal"\
     "/usr/share/awesome/themes/xathereal"
 
