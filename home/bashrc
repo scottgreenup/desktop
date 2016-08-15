@@ -19,7 +19,8 @@ PS1="
 └──> "
 
 BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-tomorrow-night.sh"
-[[ -s "$BASE16_SHELL" ]] && source $BASE16_SHELL
+echo "Sourcing"
+[[ -s "$BASE16_SHELL" ]] && source $BASE16_SHELL && echo "Sourced."
 
 export TERM='rxvt-256color'
 export EDITOR='vim'

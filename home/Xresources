@@ -62,7 +62,6 @@ xft*hintstyle:              hintslight
 xft*rgba:                   rgb
 !===============================================================================
 
-*.font:                     xft:Fantasque Sans Mono:size=9:dpi=176
 
 !===============================================================================
 ! URXVT settings
@@ -76,6 +75,8 @@ urxvt.externalBorder:       0
 urxvt.internalBorder:       10
 urxvt.fading:               false
 urxvt.fadeColor:            base00
+!urxvt.font:                 xft:Fantasque Sans Mono:size=7:dpi=176
+urxvt.font:                 xft:Anonymous Pro:size=7:dpi=176:style=Regular
 urxvt.iso14755:             false
 urxvt.iso14755_52:          false
 urxvt.lineSpace:            0
@@ -101,3 +102,5 @@ xscreensaver.Dialog.internalBorderWidth: 0
 xscreensaver.Dialog.shadowThickness: 0
 xscreensaver.passwd.thermometer.width: 0
 !===============================================================================
+
+Xcursor.size: 16

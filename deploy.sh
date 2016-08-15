@@ -4,72 +4,84 @@ git submodule update --init --recursive
 
 cwd=$(pwd)
 
+function checkfile() {
+    filename=${1}
+    if [[ -e "${filename}" ]]; then
+        if [[ ! -h "${filename}" ]]; then
+            mv "${filename}" "${filename}.backup"
+            echo "${filename} -> ${filename}.backup"
+        else
+            rm "${filename}"
+        fi
+    fi
+}
+
 #===============================================================================
 # Color
 #-------------------------------------------------------------------------------
-rm -f "~/.config/base16-shell"
-ln -s\
+checkfile "${HOME}/.config/base16-shell"
+ln -sT\
     "${cwd}/submodules/github.com/chriskempson/base16-shell"\
-    "/home/$(whoami)/.config/base16-shell"
+    "/${HOME}/.config/base16-shell"
 #===============================================================================
 
 
 #===============================================================================
 # VIM
 #-------------------------------------------------------------------------------
-rm -f "${cwd}/home/vim/autoload/pathogen.vim"
-ln -s\
+ln -sTf\
     "${cwd}/submodules/github.com/tpope/vim-pathogen/autoload/pathogen.vim"\
     "${cwd}/home/vim/autoload/pathogen.vim"
 
-rm ${cwd}/home/vim/bundle/*
-
-ln -s\
+ln -sTf\
     "${cwd}/submodules/github.com/chriskempson/base16-vim"\
     "${cwd}/home/vim/bundle/base16-vim"
 
-ln -s\
+ln -sTf\
     "${cwd}/submodules/github.com/scrooloose/nerdtree"\
     "${cwd}/home/vim/bundle/nerdtree"
 
-ln -s\
+ln -sTf\
     "${cwd}/submodules/github.com/ntpeters/vim-better-whitespace"\
     "${cwd}/home/vim/bundle/vim-better-whitespace"
 
-ln -s\
+ln -sTf\
     "${cwd}/submodules/github.com/pangloss/vim-javascript"\
     "${cwd}/home/vim/bundle/vim-javascript"
 
-[[ -e ~/.vim ]] && rm ~/.vim
-ln -s "${cwd}/home/vim" "/home/$(whoami)/.vim"
 
-[[ -e ~/.vimrc ]] && rm ~/.vimrc
-ln -s "${cwd}/home/vimrc" "/home/$(whoami)/.vimrc"
+checkfile "${HOME}/.vim"
+ln -sT "${cwd}/home/vim" "/${HOME}/.vim"
+
+checkfile "${HOME}/.vimrc"
+ln -sT "${cwd}/home/vimrc" "/${HOME}/.vimrc"
 #===============================================================================
 
-hm="/home/$(whoami)"
+checkfile "${HOME}/.config/awesome/rc.lua"
+ln -sfT\ "${cwd}/home/config/awesome/rc.lua"\ "${HOME}/.config/awesome/rc.lua"
 
-if [[ ! -e "${hm}/.config/awesome" ]]; then
-    mkdir --parents "/home/$(whoami)/.config/awesome"
-fi
-ln -sf\
-    "${cwd}/home/config/awesome/rc.lua"\
-    "${hm}/.config/awesome/rc.lua"
-ln -sf\
+checkfile "${HOME}/.config/awesome/assault.lua"
+ln -sfT\
     "${cwd}/submodules/github.com/NuckChorris/assault/awesomewm/assault.lua"\
-    "${hm}/.config/awesome/assault.lua"
+    "${HOME}/.config/awesome/assault.lua"
 
-if [[ -h "${hm}/bin" ]]; then
-    rm -rf "${hm}/bin"
-    ln -sf "${cwd}/bin" "${hm}/bin"
+if [[ -h "${HOME}/bin" ]]; then
+    rm -rf "${HOME}/bin"
 else
-    echo "${hm}/bin is not a symbolic link, please remove and re-run script."
+    echo "${HOME}/bin is not a symbolic link, please remove and re-run script."
 fi
 
-ln -sfT "${cwd}/home/xmodmaprc"  "${hm}/.Xmodmap"
-ln -sfT "${cwd}/home/xprofile"   "${hm}/.xprofile"
-ln -sfT "${cwd}/home/bashrc"     "${hm}/.bashrc"
-ln -sfT "${cwd}/home/Xresources" "${hm}/.Xresources"
+checkfile "${HOME}/bin"
+ln -sfT "${cwd}/bin" "${HOME}/bin"
+
+checkfile "${HOME}/.Xmodmap"
+ln -sfT "${cwd}/home/xmodmaprc"  "${HOME}/.Xmodmap"
+checkfile "${HOME}/.xprofile"
+ln -sfT "${cwd}/home/xprofile"   "${HOME}/.xprofile"
+checkfile "${HOME}/.bashrc"
+ln -sfT "${cwd}/home/bashrc"     "${HOME}/.bashrc"
+checkfile "${HOME}/.Xresources"
+ln -sfT "${cwd}/home/Xresources" "${HOME}/.Xresources"
 
 sudo ln -sfT\
     "${cwd}/usr/share/awesome/themes/xathereal"\

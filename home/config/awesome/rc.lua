@@ -342,26 +342,6 @@ globalkeys = awful.util.table.join(
         command = command .. " " .. tostring(scrgeom.width)
         command = command .. " " .. tostring(scrgeom.height)
         awful.util.spawn(command)
-    end),
-
-    -- DMenu for ViM
-    awful.key({ modkey }, "o", function()
-        local foci = client.focus
-        local scr = nil
-        if (foci ~= nil)
-        then
-            scr = client.focus.screen
-        else
-            scr = mouse.screen
-        end
-
-        local scrgeom = screen[scr].workarea
-        local command = "spotlight_vim"
-        command = command .. " " .. tostring(scrgeom.x)
-        command = command .. " " .. tostring(scrgeom.y)
-        command = command .. " " .. tostring(scrgeom.width)
-        command = command .. " " .. tostring(scrgeom.height)
-        awful.util.spawn(command)
     end)
 )
 
