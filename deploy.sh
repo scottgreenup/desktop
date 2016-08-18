@@ -49,6 +49,9 @@ ln -sTf\
     "${cwd}/submodules/github.com/pangloss/vim-javascript"\
     "${cwd}/home/vim/bundle/vim-javascript"
 
+ln -STf\
+    "${cwd}/submodules/github.com/tpope/vim-fugitive"\
+    "${cwd}/home/vim/bundle/vim-fugitive"
 
 checkfile "${HOME}/.vim"
 ln -sT "${cwd}/home/vim" "/${HOME}/.vim"
