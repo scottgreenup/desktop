@@ -37,6 +37,7 @@ set showmatch
 set smartcase           " ignore case if lowercaes, else, case-sensitive
 set smartindent
 set softtabstop=4       " affects <TAB> key
+set tabstop=4
 set title               " change terminal title
 set undolevels=5000     " more levels of undos
 set visualbell          " don't beep

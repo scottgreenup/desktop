@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# default e8:b1:fc:02:df:0a
+
 if [[ -z "$1" ]]; then
     echo "Change MAC Address"
     echo "usage: $0 mac_address"

@@ -49,7 +49,7 @@ ln -sTf\
     "${cwd}/submodules/github.com/pangloss/vim-javascript"\
     "${cwd}/home/vim/bundle/vim-javascript"
 
-ln -STf\
+ln -sTf\
     "${cwd}/submodules/github.com/tpope/vim-fugitive"\
     "${cwd}/home/vim/bundle/vim-fugitive"
 
@@ -61,7 +61,7 @@ ln -sT "${cwd}/home/vimrc" "/${HOME}/.vimrc"
 #===============================================================================
 
 checkfile "${HOME}/.config/awesome/rc.lua"
-ln -sfT\ "${cwd}/home/config/awesome/rc.lua"\ "${HOME}/.config/awesome/rc.lua"
+ln -sTf "${cwd}/home/config/awesome/rc.lua" "${HOME}/.config/awesome/rc.lua"
 
 checkfile "${HOME}/.config/awesome/assault.lua"
 ln -sfT\
