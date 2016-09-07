@@ -29,6 +29,8 @@ ln -sT\
 #===============================================================================
 # VIM
 #-------------------------------------------------------------------------------
+mkdir --parents "${cwd}/home/vim/autoload"
+mkdir --parents "${cwd}/home/vim/bundle"
 ln -sTf\
     "${cwd}/submodules/github.com/tpope/vim-pathogen/autoload/pathogen.vim"\
     "${cwd}/home/vim/autoload/pathogen.vim"
