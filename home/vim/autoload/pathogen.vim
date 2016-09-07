@@ -1,1 +1,0 @@
-/home/scott/dev/desktop/submodules/github.com/tpope/vim-pathogen/autoload/pathogen.vim
