@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+modprobe vboxpci                                                                                                                                                                                                       1
+modprobe vboxnetadp                                                                                                                                                                                                    1
+modprobe vboxnetflt
+modprobe vboxdrv
