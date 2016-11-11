@@ -15,12 +15,16 @@ nmap <silent> <leader>n  :set nonu! <bar> set nornu!<CR>
 nmap <silent> <leader>p  :set nopaste!<CR>
 "-------------------------------------------------------------------------------
 
+:command! -nargs=1 -range SuperRetab <line1>,<line2>s/\v%(^ *)@<= {<args>}/\t/g
+:command! -range=% -nargs=0 Tab2Space execute '<line1>,<line2>s#^\t\+#\=repeat(" ", len(submatch(0))*' . &ts . ')'
+:command! -range=% -nargs=0 Space2Tab execute '<line1>,<line2>s#^\( \{'.&ts.'\}\)\+#\=repeat("\t", len(submatch(0))/' . &ts . ')'
+
 let g:snips_author='Scott Greenup'
 
 set autoindent          " always have autoindent on
 set copyindent          " copy the previous indentation on autoindenting
 set display+=lastline
-set expandtab           " <TAB> will insert <softtabstop> spaces
+"set expandtab           " <TAB> will insert <softtabstop> spaces
 set hidden              " can edit a new file without saving the first
 set history=1000        " more history, more commands
 set hlsearch            " highlight the searched terms
@@ -34,6 +38,7 @@ set showmatch
 set smartcase           " ignore case if lowercaes, else, case-sensitive
 set smartindent
 set softtabstop=4       " affects <TAB> key
+set tabstop=4
 set title               " change terminal title
 set undolevels=5000     " more levels of undos
 set visualbell          " don't beep

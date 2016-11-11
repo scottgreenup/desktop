@@ -3,14 +3,16 @@
 git submodule update --init --recursive
 
 cwd=$(pwd)
+hm="/home/$(whoami)"
 
 #===============================================================================
 # Color
 #-------------------------------------------------------------------------------
-rm -f "~/.config/base16-shell"
+rm "${hm}/.config/base16-shell"
+
 ln -s\
     "${cwd}/submodules/github.com/chriskempson/base16-shell"\
-    "/home/$(whoami)/.config/base16-shell"
+    "${hm}/.config/base16-shell"
 #===============================================================================
 
 
@@ -46,8 +48,6 @@ ln -s "${cwd}/home/vim" "/home/$(whoami)/.vim"
 [[ -e ~/.vimrc ]] && rm ~/.vimrc
 ln -s "${cwd}/home/vimrc" "/home/$(whoami)/.vimrc"
 #===============================================================================
-
-hm="/home/$(whoami)"
 
 if [[ ! -e "${hm}/.config/awesome" ]]; then
     mkdir --parents "/home/$(whoami)/.config/awesome"

@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+
+
+import argparse
+from datetime import timedelta, date
+
+parser = argparse.ArgumentParser(description='Print the semester weeks out')
+parser.add_argument('weeks', metavar='w', type=int, nargs='+')
+
+args = parser.parse_args()
+
+def print_semester(curr, weeks=None):
+
+    if weeks == None:
+        weeks = list(range(1, 17))
+
+    week = 1
+
+    while week != 17:
+
+        if week in weeks:
+            print("Week {week:0>2}: {date}".format(week=week, date=curr.strftime('%Y-%m-%d %a')))
+        curr += timedelta(days=1)
+
+        day = curr.strftime('%a')
+        if day == 'Sun':
+            week += 1
+            if week in weeks:
+                print()
+
+#print(args.weeks)
+
+#weeks = []
+
+print_semester(date(2016, 7, 25), args.weeks)

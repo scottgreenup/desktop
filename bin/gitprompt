@@ -1,0 +1,5 @@
+#!/bin/bash
+
+status=$(git branch | egrep '^\*' | awk '{print $NF}')
+echo -n "${status}"
+

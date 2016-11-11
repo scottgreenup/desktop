@@ -14,7 +14,6 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
-
 local assault = require("assault")
 
 --local scratch = require("scratch")
@@ -48,17 +47,13 @@ end
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/usr/share/awesome/themes/xathereal/theme.lua")
 
--- This is used later as the default terminal and editor to run.
-browser = "chromium"
-terminal = "urxvt"
-
 programs = {}
 programs["browser"]  = "chromium"
 programs["terminal"] = "urxvt"
 programs["lock"]     = "xscreensaver-command --lock"
 
 editor = os.getenv("EDITOR") or "vim"
-editor_cmd = terminal .. " -e " .. editor
+editor_cmd = programs["terminal"] .. " -e " .. editor
 
 local kpc = awful.util.spawn("keepassx2");
 
@@ -76,7 +71,7 @@ local layouts =
     -- awful.layout.suit.floating,
     awful.layout.suit.tile,
     -- awful.layout.suit.tile.left,
-    -- awful.layout.suit.tile.bottom,
+    awful.layout.suit.tile.bottom,
     -- awful.layout.suit.tile.top,
     -- awful.layout.suit.fair,
     -- awful.layout.suit.fair.horizontal,
@@ -122,8 +117,10 @@ mymainmenu = awful.menu({
     }
 )
 
-mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
-                                     menu = mymainmenu })
+mylauncher = awful.widget.launcher({
+	image = beautiful.awesome_icon,
+    menu = mymainmenu
+})
 
 -- Menubar configuration
 menubar.utils.terminal = programs["terminal"] -- Set the terminal for applications that require it
@@ -228,8 +225,8 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     if s == 1 then right_layout:add(wibox.widget.systray()) end
-    right_layout:add(widget_batt0)
-    right_layout:add(widget_batt1)
+    --right_layout:add(widget_batt0)
+    --right_layout:add(widget_batt1)
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -356,9 +353,10 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ modkey,           }, "t",      awful.client.floating.toggle                     ),
     awful.key({ modkey,           }, "Return", function (c) c:swap(awful.client.getmaster()) end),
-    awful.key({ modkey, "Shift"   }, "s",      function (c) awful.client.movetoscreen(c, 0)  end),
-    awful.key({ modkey, "Shift"   }, "d",      function (c) awful.client.movetoscreen(c, 1)  end),
-    awful.key({ modkey, "Shift"   }, "f",      function (c) awful.client.movetoscreen(c, 2)  end),
+
+    awful.key({ modkey, "Shift"   }, "s",      function (c) awful.client.movetoscreen(c, awful.screen.getbycoord(960, 540))  end),
+    awful.key({ modkey, "Shift"   }, "d",      function (c) awful.client.movetoscreen(c, awful.screen.getbycoord(2880, 540)) end),
+    awful.key({ modkey, "Shift"   }, "f",      function (c) awful.client.movetoscreen(c, awful.screen.getbycoord(4800, 540)) end),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
     awful.key({ modkey,           }, "n",
         function (c)
