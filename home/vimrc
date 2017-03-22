@@ -2,22 +2,6 @@
 " This must be first, because it changes other options as side effect
 set nocompatible
 
-"-------------------------------------------------------------------------------
-" Leader customisations
-"-------------------------------------------------------------------------------
-" Quickly reload the vimrc file
-nmap <silent> <leader>ev :e  $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
-
-" Toggle functionalities
-nmap <silent> <leader>n  :set nonu! <bar> set nornu!<CR>
-nmap <silent> <leader>p  :set nopaste!<CR>
-
-nmap <silent> <c-d>  :bnext<CR>
-nmap <silent> <c-a>  :bprevious<CR>
-"-------------------------------------------------------------------------------
-
 let g:snips_author='Scott Greenup'
 
 set autoindent          " always have autoindent on
@@ -28,6 +12,7 @@ set hidden              " can edit a new file without saving the first
 set history=1000        " more history, more commands
 set hlsearch            " highlight the searched terms
 set incsearch           " show search matches as you type "set spell
+set laststatus=2
 set nowrap              " don't wrap lines
 set number              " shows the number of the cursor line
 set relativenumber      " shows relative distance between lines
@@ -38,6 +23,7 @@ set smartcase           " ignore case if lowercaes, else, case-sensitive
 set smartindent
 set softtabstop=4       " affects <TAB> key
 set tabstop=4
+set textwidth=80
 set title               " change terminal title
 set undolevels=5000     " more levels of undos
 set visualbell          " don't beep
@@ -75,6 +61,8 @@ au VimResized * exe "normal! \<c-w>="
 filetype plugin on
 filetype indent on
 let g:tex_flavor='latex'
+
+
 
 command! WQA :wqa
 command! WqA :wqa
@@ -120,10 +108,101 @@ autocmd FileType gitcommit DiffGitCached | wincmd L | wincmd p
 
 "au BufRead,BufNewFile *.ts set filetype=javascript
 
+let g:statline_syntastic = 0
+
 " Pathogen for third-party libraries
 call pathogen#infect()
 call pathogen#helptags()
 
 " NerdTree
-
 hi Normal ctermbg=None
+
+"===============================================================================
+" ctags setup
+set tags=tags;
+
+" ctags customisations
+function! FollowTag()
+    if !exists("w:tagbrowse")
+        vsplit
+        let w:tagbrowse=1
+    endif
+    execute "tag " . expand("<cword>")
+    execute "normal! \<c-w>="
+endfunction
+nnoremap <Leader>o :call FollowTag()<CR>
+
+function! FollowTag2()
+    execute "tag " . expand("<cword>")
+    execute "normal! \<c-w>="
+endfunction
+nnoremap <Leader><Leader> :call FollowTag2()<CR>
+
+function! EditTarget()
+    let basepath = expand('%:p:h') . '/TARGETS'
+    if !filereadable(basepath)
+        let basepath = expand('%:p:h') . '/../TARGETS'
+        if !filereadable(basepath)
+            echo "Cannot find TARGETS file"
+            return
+        endif
+    endif
+    execute "vsplit " . basepath
+endfunction
+nnoremap <Leader>t :call EditTarget()<CR>
+
+set statusline+=%f
+
+" Syntastic
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_javascript_checkers = ['eslint']
+"let g:syntastic_javascript_eslint_exec = '/usr/bin/eslint'
+" 402 - imports have to be first
+" 501 - lines have to be less than 80.
+let g:syntastic_python_flake8_args='--ignore=E402,E501,E711'
+let g:syntastic_python_pyflakes_args='--ignore=E402'
+let g:syntastic_sh_shellcheck_args='-x'
+
+let g:powerline_pycmd='py3'
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+
+"-------------------------------------------------------------------------------
+" Leader customisations
+"-------------------------------------------------------------------------------
+" Quickly reload the vimrc file nmap <silent> <leader>ev :e  $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+" Toggle functionalities
+nmap <silent> <leader>n  :set nonu! <bar> set nornu!<CR>
+nmap <silent> <leader>p  :set nopaste!<CR>
+
+" Change working directotry to be the directory of the focused file
+nmap <silent> <leader>w  :cd %:p%h<CR>
+
+" NERDTree will move to the current files location
+nnoremap <leader>r :NERDTreeFind<CR>
+"-------------------------------------------------------------------------------
+
+nmap <silent> <c-d>  :bnext<CR>
+nmap <silent> <c-a>  :bprevious<CR>
+
+noremap <F5> <Esc>:syntax sync fromstart<CR>

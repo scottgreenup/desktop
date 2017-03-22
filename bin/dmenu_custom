@@ -18,7 +18,7 @@ if len(sys.argv) < 2:
             w = int(res[0])
             h = int(res[1])
 
-            dw = int(w * 0.6)
+            dw = int(w * 0.3)
             dx = int((w - dw) / 2)
             dy = 200
 
@@ -47,7 +47,7 @@ css['original'] = ['#1B1D1E', '#80D4FF', '#333333', '#FFFFFF'];
 css['bright'] = ['#373B41', '#DE935F', '#81A2BE', '#000000'];
 theme = 'bright'
 sp.call(['dmenu_run',
-    '-l',  '20',
+    '-l',  '5',
     '-nb', css[theme][0],
     '-nf', css[theme][1],
     '-sb', css[theme][2],
@@ -55,7 +55,7 @@ sp.call(['dmenu_run',
     '-p',  "",
     '-f',
     '-i',
-    '-fn', "Inconsolata:size=11",
+    '-fn', "DejaVu Sans Mono:size=11:style=Book",
     '-h',  geo['h'],
     '-w',  geo['w'],
     '-x',  geo['x'],

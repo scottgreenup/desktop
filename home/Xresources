@@ -19,9 +19,9 @@
 #define base0E #b294bb
 #define base0F #a3685a
 !
- *.foreground:   base05
- *.background:   base00
- *.cursorColor:  base05
+*.foreground:	#c5c8c6
+*.background:	#1d1f21
+*.cursorColor:	#c5c8c6
 !
 ! *.color0:       base00
 ! *.color1:       base08
@@ -54,38 +54,42 @@
 !===============================================================================
 ! XFT
 !===============================================================================
-xft*antialias:              true
-xft*autohint:               false
-xft*dpi:                    176
-xft*hinting:                true
-xft*hintstyle:              hintslight
-xft*rgba:                   rgb
+Xft.antialias:              true
+Xft.autohint:               false
+Xft.dpi:                    109
+Xft.hinting:                true
+Xft.hintstyle:              hintslight
+Xft.rgba:                   rgb
 !===============================================================================
 
 
 !===============================================================================
 ! URXVT settings
 !===============================================================================
-urxvt.background:           base00
+urxvt.background:	#1d1f21
 urxvt.blurRadius:           10
 urxvt.borderless:           true
+urxvt.buffered:             true
 urxvt.cursorBlink:          true
 urxvt.depth:                32
 urxvt.externalBorder:       0
-urxvt.internalBorder:       10
-urxvt.fading:               false
-urxvt.fadeColor:            base00
+urxvt.internalBorder:       1
+urxvt.fading:               10
+urxvt.fadeColor:	        #1d1f21
 !urxvt.font:                 xft:Fantasque Sans Mono:size=7:dpi=176
-urxvt.font:                 xft:Anonymous Pro:size=7:dpi=176:style=Regular
 urxvt.iso14755:             false
 urxvt.iso14755_52:          false
-urxvt.lineSpace:            0
+urxvt.jumpScroll:           false
+urxvt.lineSpace:            1
+urxvt.modifier:             super
+urxvt.pointerBlank:         true
 urxvt.saveLines:            65535
 urxvt.scrollBar:            false
 urxvt.scrollBar_right:      true
 urxvt.scrollBar_floating:   true
 urxvt.scrollstyle:          plain
 urxvt.shading:              40
+urxvt.thickness:            3
 urxvt.tintcolor:            #FF0000
 urxvt.transparent:          false
 urxvt.urgentOnBell:         false
@@ -104,3 +108,19 @@ xscreensaver.passwd.thermometer.width: 0
 !===============================================================================
 
 Xcursor.size: 16
+
+!URxvt.font:    xft:DejaVu Sans Mono for Powerline:size=13:dpi=96:style=Book
+!URxvt.font:	xft:DejaVu Sans Mono for Powerline:size=7:dpi=96:style=Book
+!URxvt.font:	xft:Inconsolata-g for Powerline:style=g:dpi=96:size=11
+
+urxvt.perl-ext-common:	font-size
+urxvt.keysym.M-equal:	font-size:reset
+urxvt.keysym.M-minus:	font-size:decsave
+urxvt.keysym.M-plus:	font-size:incsave
+URxvt.font:	xft:Anonymous Pro Minus:style=Regular:dpi=101:size=13
+xft*dpi:	101
+xft*antialias:	true
+xft*autohint:	false
+xft*hinting:	true
+xft*hintstyle:	hintslight
+xft*rgba:	rgb

@@ -8,15 +8,129 @@
 bash_completion="/usr/share/bash-completion/bash_completion"
 [[ -f "${bash_completion}" ]] && . "${bash_completion}"
 
+function color() {
+    echo "\[$(tput setaf "${1}")\]"
 
-blue="\[\033[34m\]"
-yellow="\[\033[33m\]"
-green="\[\033[32m\]"
-nocolor="\[\033[0m\]"
+    if [[ "$#" -eq 2 ]]; then
+        echo "\[$(tput setab "${2}")\]"
+    fi
+}
 
-PS1="
-┌ ${yellow}\h${nocolor} [${green}\w${nocolor}]
-└──> "
+function reset() {
+    echo "\[$(tput setaf 7)\]"
+}
+
+function success_prompt() {
+    local last_status="${?}"
+    local success="⌒_⌒"
+    local failure="0_o"
+    if [[ "${last_status}" != "0" ]]; then
+        echo "$(color 1)${failure}$(reset)"
+    else
+        echo "$(color 2)${success}$(reset)"
+    fi
+}
+
+function bash_prompt() {
+
+    #local files
+    #local files_prompt
+    #files=$(find -maxdepth 1 | wc | awk '{print $1}')
+    #files_prompt="${files} files"
+
+
+    last_status=$(success_prompt)
+
+    local login
+    local time
+    local directory
+
+    login="$(color 4)\u$(reset)@$(color 6)\H$(reset)"
+    time="$(color 5)\t$(reset)"
+    directory="$(color 3)\w$(reset)"
+
+    local virtualenv
+
+    local sep="─"
+    local sep="~"
+    local lb="("
+    local rb=")"
+
+    if printenv VIRTUAL_ENV &>/dev/null; then
+        virtualenv=$(printenv VIRTUAL_ENV | awk -F/ '{print $NF}')
+        virtualenv="${sep}{${virtualenv}}"
+    else
+        virtualenv=""
+    fi
+
+    if git status &>/dev/null; then
+        local gitbranch
+        gitbranch=$(git branch | egrep "^\*" | awk '{print $NF}')
+
+        local count_untracked="0"
+        local count_staged="0"
+        local count_modified="0"
+
+        while IFS= read -r line; do
+            x=$(echo "${line}" | head -c 1)
+            y=$(echo "${line}" | head -c 2 | tail -c 1)
+
+            #echo "x=$x y=$y"
+
+            if [[ "$x" = "?" ]] && [[ "$y" = "?" ]]; then
+                count_untracked=$((count_untracked + 1))
+            elif [[ "$x" != " " ]] && [[ "$y" == " " ]]; then
+                count_staged=$((count_staged + 1))
+            elif [[ "$x" == " " ]] && [[ "$y" != " " ]]; then
+                count_modified=$((count_modified + 1))
+            fi
+        done < <(git status -s)
+
+
+        if [[ ${count_untracked} != 0 ]]; then
+            count_untracked=" $(color 3)...${count_untracked}$(reset)"
+        else
+            count_untracked=""
+        fi
+
+        if [[ ${count_modified} != 0 ]]; then
+            count_modified=" $(color 1)✚${count_modified}$(reset)"
+        else
+            count_modified=""
+        fi
+
+        if [[ ${count_staged} != 0 ]]; then
+            count_staged=" $(color 2)●${count_staged}$(reset)"
+        else
+            count_staged=""
+        fi
+
+
+        # M == Modified and Unstaged ●
+        # D == Deleted  -
+        # R == Renamed  R
+        # C == Copied   C
+        # U == Updated but Unmerged
+        # A == Added
+        # "??" == Untracked
+        local gitprompt="${sep}${lb}${gitbranch}${count_staged}${count_modified}${count_untracked}${rb}"
+    fi
+
+    echo ""
+    echo -n "${lb}${last_status}${rb}"
+    echo -n "${sep}"
+    echo -n "${lb}${time}${rb}"
+    echo -n "${sep}"
+    echo -n "${lb}${login}${rb}"
+    echo -n "${virtualenv}"
+    echo -n "${sep}"
+    echo -n "${lb}${directory}${rb}"
+    echo -n "${gitprompt}"
+    echo ""
+    echo "$ "
+}
+
+PROMPT_COMMAND='PS1="$(bash_prompt)"'
 
 BASE16_SHELL="$HOME/.config/base16-shell/scripts/base16-tomorrow-night.sh"
 [[ -s "$BASE16_SHELL" ]] && source $BASE16_SHELL
@@ -62,3 +176,17 @@ alias gll="/usr/bin/git log --date-order --graph --oneline"
 
 alias feh="feh --auto-zoom --borderless --draw-filename --geometry 800x600"
 
+alias src="source ~/.bashrc"
+
+alias C1="awk '{print \$1}'"
+alias C2="awk '{print \$2}'"
+alias C3="awk '{print \$3}'"
+alias C4="awk '{print \$4}'"
+alias C5="awk '{print \$5}'"
+alias C6="awk '{print \$6}'"
+alias C7="awk '{print \$7}'"
+alias C8="awk '{print \$8}'"
+
+alias sum="awk '{sum+=\$1} END {print sum}'"
+
+alias rebuild_ctags="cd ~/fbcode/; ctags -R -L ~/.ctags.list --python-kinds=-i"
