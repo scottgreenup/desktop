@@ -87,6 +87,8 @@ checkfile "${HOME}/.bashrc"
 ln -sfT "${cwd}/home/bashrc"     "${HOME}/.bashrc"
 checkfile "${HOME}/.Xresources"
 ln -sfT "${cwd}/home/Xresources" "${HOME}/.Xresources"
+checkfile "${HOME}/.inputrc"
+ln -sfT "${cwd}/home/inputrc" "${HOME}/.inputrc"
 
 mkdir --parents "${HOME}/.urxvt/ext"
 checkfile "${HOME}/.urxvt/ext/font-size"
