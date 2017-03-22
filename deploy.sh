@@ -88,6 +88,12 @@ ln -sfT "${cwd}/home/bashrc"     "${HOME}/.bashrc"
 checkfile "${HOME}/.Xresources"
 ln -sfT "${cwd}/home/Xresources" "${HOME}/.Xresources"
 
+mkdir --parents "${HOME}/.urxvt/ext"
+checkfile "${HOME}/.urxvt/ext/font-size"
+ln -sTf\
+    "${cwd}/submodules/github.com/majutsushi/urxvt-font-size"\
+    "${HOME}/.urxvt/ext/font-size"
+
 sudo ln -sfT\
     "${cwd}/usr/share/awesome/themes/xathereal"\
     "/usr/share/awesome/themes/xathereal"
