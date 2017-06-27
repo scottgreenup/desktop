@@ -2,19 +2,23 @@
 -- TODO - scratchpad for applications
 -- TODO - focus when app closes
 
+
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
 
-awful.rules = require("awful.rules")
-
+-- Third-party libraries
 local assault = require("assault")      -- battery widget
 local beautiful = require("beautiful")  -- theme management
 local common = require("awful.widget.common")
+local lain = require("lain")            -- layouts, widgets, and utilities
 local menubar = require("menubar")
 local naughty = require("naughty")      -- notification library
 local wibox = require("wibox")          -- widget and layout library
 local vicious = require("vicious")      -- system widgets
+
+-- Library configuration
+awful.rules = require("awful.rules")
 
 
 if awesome.startup_errors then
@@ -25,7 +29,11 @@ if awesome.startup_errors then
     })
 end
 
-function pprint(words)
+--------------------------------------------------------------------------------
+-- Just a quick print function that relies on naughty notification boxes. E.g.:
+--      debug_print(string.format("%d\n", myTag.index))
+--------------------------------------------------------------------------------
+local function debug_print(words)
     naughty.notify({
         preset = naughty.config.presets.normal,
         title = "Debug Message",
@@ -33,6 +41,7 @@ function pprint(words)
         width = 400
     })
 end
+
 
 -- Handle runtime errors after startup
 do
@@ -50,7 +59,6 @@ do
     end)
 end
 
--- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init("/usr/share/awesome/themes/xathereal/theme.lua")
 
@@ -64,7 +72,8 @@ programs["randr"]       = "arandr"
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = programs["terminal"] .. " -e " .. editor
 
-modkey = "Mod1" -- alt, Mod4 is LOGO
+-- Can also be 'alt', 'Mod4' (logo key), ...
+modkey = "Mod1"
 
 local layouts = {
     awful.layout.suit.tile,
@@ -85,6 +94,7 @@ end
 screen.connect_signal("property:geometry", set_wallpaper)
 
 awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 1, layouts[1])
+
 shared_tag_list = screen[1].tags
 
 -- Ensure every screen has a tag, and a tag that is activated
@@ -236,8 +246,14 @@ gapwidget:set_text("   ")
 memwidget = wibox.widget.textbox()
 vicious.register(memwidget, vicious.widgets.mem, "mem $1%", 13)
 
-cpuwidget = wibox.widget.textbox()
-vicious.register(cpuwidget, vicious.widgets.cpu, "cpu $1%")
+-- cpuwidget = wibox.widget.textbox()
+-- vicious.register(cpuwidget, vicious.widgets.cpu, "cpu $1%")
+
+local cpu = lain.widget.cpu {
+    settings = function()
+        widget:set_markup("CPU " .. cpu_now.usage)
+    end
+}
 
 uptwidget = wibox.widget.textbox()
 vicious.register(uptwidget, vicious.widgets.uptime, "uptime $1 days")
@@ -294,7 +310,7 @@ for s = 1, screen.count() do
     right_layout:add(gapwidget)
     right_layout:add(uptwidget)
     right_layout:add(gapwidget)
-    right_layout:add(cpuwidget)
+    right_layout:add(cpu.widget)
     right_layout:add(gapwidget)
     right_layout:add(memwidget)
     right_layout:add(gapwidget)
@@ -367,7 +383,7 @@ end
 --
 ----awful.spawn("arandr", {tag=spotify_tag})
 --
---pprint(string.format("%d\n", spotify_tag.index))
+--debug_print(string.format("%d\n", spotify_tag.index))
 --spotify_tag.selected = false
 
 -- onkey we need to move_tag_to_screen that is focused, then select that client
@@ -422,13 +438,13 @@ globalkeys = awful.util.table.join(
 
     -- Audio Control
     awful.key({}, "XF86AudioRaiseVolume", function()
-        awful.util.spawn("amixer set Master 10%+")
+        awful.util.spawn("amixer -D pulse set Master 10%+")
     end),
     awful.key({}, "XF86AudioLowerVolume", function()
-        awful.util.spawn("amixer set Master 10%-")
+        awful.util.spawn("amixer -D pulse set Master 10%-")
     end),
     awful.key({}, "XF86AudioMute", function()
-        awful.util.spawn("amixer sset Master toggle")
+        awful.util.spawn("amixer -D pulse sset Master toggle")
     end),
 
     -- Brightness
