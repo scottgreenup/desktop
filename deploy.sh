@@ -56,10 +56,6 @@ ln -sTf\
     "${cwd}/submodules/github.com/tpope/vim-fugitive"\
     "${cwd}/home/vim/bundle/vim-fugitive"
 
-ln -sTf\
-    "${cwd}/submodules/github.com/copycat-killer/lain"\
-    "${cwd}/home/home/config/awesome/lain"
-
 checkfile "${HOME}/.vim"
 ln -sT "${cwd}/home/vim" "/${HOME}/.vim"
 
@@ -67,14 +63,23 @@ checkfile "${HOME}/.vimrc"
 ln -sT "${cwd}/home/vimrc" "/${HOME}/.vimrc"
 #===============================================================================
 
+## [ Awesome WM ] ##
+
 mkdir --parents "${HOME}/.config/awesome"
 checkfile "${HOME}/.config/awesome/rc.lua"
 ln -sTf "${cwd}/home/config/awesome/rc.lua" "${HOME}/.config/awesome/rc.lua"
+ln -sTf "${cwd}/home/config/awesome/themes" "${HOME}/.config/awesome/themes"
 
 checkfile "${HOME}/.config/awesome/assault.lua"
 ln -sfT\
     "${cwd}/submodules/github.com/NuckChorris/assault/awesomewm/assault.lua"\
     "${HOME}/.config/awesome/assault.lua"
+
+ln -sTf\
+    "${cwd}/submodules/github.com/copycat-killer/lain"\
+    "${cwd}/home/home/config/awesome/lain"
+
+## [ Miscellaneous ] ##
 
 if [[ -h "${HOME}/bin" ]]; then
     rm -rf "${HOME:?}/bin"
