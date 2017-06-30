@@ -56,6 +56,10 @@ ln -sTf\
     "${cwd}/submodules/github.com/tpope/vim-fugitive"\
     "${cwd}/home/vim/bundle/vim-fugitive"
 
+ln -sTf\
+    "${cwd}/submodules/github.com/copycat-killer/lain"\
+    "${cwd}/home/home/config/awesome/lain"
+
 checkfile "${HOME}/.vim"
 ln -sT "${cwd}/home/vim" "/${HOME}/.vim"
 
@@ -73,7 +77,7 @@ ln -sfT\
     "${HOME}/.config/awesome/assault.lua"
 
 if [[ -h "${HOME}/bin" ]]; then
-    rm -rf "${HOME}/bin"
+    rm -rf "${HOME:?}/bin"
 else
     echo "${HOME}/bin is not a symbolic link, please remove and re-run script."
 fi
