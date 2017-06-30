@@ -77,7 +77,7 @@ ln -sfT\
 
 ln -sTf\
     "${cwd}/submodules/github.com/copycat-killer/lain"\
-    "${cwd}/home/home/config/awesome/lain"
+    "${HOME}/.config/awesome/lain"
 
 ## [ Miscellaneous ] ##
 
