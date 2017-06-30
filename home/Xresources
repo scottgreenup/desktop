@@ -98,4 +98,4 @@ xft*rgba:	    rgb
 ! DPI is smaller due to some DPI bug that is either mulitplying the DPIs or...?
 !URxvt.font:	xft:M+ 1m:style=light:dpi=110:size=12
 !URxvt.font:	xft:Inconsolata-g:style=regular:dpi=110:size=9
-URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=110:size=11
+URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=110:size=12
