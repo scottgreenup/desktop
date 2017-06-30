@@ -107,7 +107,3 @@ ln -sTf\
     "${cwd}/submodules/github.com/majutsushi/urxvt-font-size/font-size"\
     "${HOME}/.urxvt/ext/font-size"
 
-sudo ln -sfT\
-    "${cwd}/usr/share/awesome/themes/xathereal"\
-    "/usr/share/awesome/themes/xathereal"
-
