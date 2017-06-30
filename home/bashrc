@@ -1,6 +1,17 @@
-#
+#!/usr/bin/env bash
+
 # ~/.bashrc
-#
+
+
+fortune -a -e
+
+# This is a dirty hack to make it easier to reset the keyboard. Udev rules did
+# not solve this problem. Something about the right session not getting the new
+# keyboard changes.
+setxkbmap -option caps:escape
+
+# This just ensures everything is there.
+xrdb ~/.Xresources
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -16,18 +27,18 @@ function color() {
     fi
 }
 
-function reset() {
+function reset_color() {
     echo "\[$(tput setaf 7)\]"
 }
 
 function success_prompt() {
     local last_status="${?}"
-    local success="⌒_⌒"
+    local success="^_^"
     local failure="0_o"
     if [[ "${last_status}" != "0" ]]; then
-        echo "$(color 1)${failure}$(reset)"
+        echo "$(color 1)${failure}$(reset_color)"
     else
-        echo "$(color 2)${success}$(reset)"
+        echo "$(color 2)${success}$(reset_color)"
     fi
 }
 
@@ -45,9 +56,9 @@ function bash_prompt() {
     local time
     local directory
 
-    login="$(color 4)\u$(reset)@$(color 6)\H$(reset)"
-    time="$(color 5)\t$(reset)"
-    directory="$(color 3)\w$(reset)"
+    login="$(color 4)\u$(reset_color)@$(color 6)\H$(reset_color)"
+    time="$(color 5)\t$(reset_color)"
+    directory="$(color 3)\w$(reset_color)"
 
     local virtualenv
 
@@ -88,19 +99,19 @@ function bash_prompt() {
 
 
         if [[ ${count_untracked} != 0 ]]; then
-            count_untracked=" $(color 3)...${count_untracked}$(reset)"
+            count_untracked=" $(color 3)...${count_untracked}$(reset_color)"
         else
             count_untracked=""
         fi
 
         if [[ ${count_modified} != 0 ]]; then
-            count_modified=" $(color 1)✚${count_modified}$(reset)"
+            count_modified=" $(color 1)✚${count_modified}$(reset_color)"
         else
             count_modified=""
         fi
 
         if [[ ${count_staged} != 0 ]]; then
-            count_staged=" $(color 2)●${count_staged}$(reset)"
+            count_staged=" $(color 2)●${count_staged}$(reset_color)"
         else
             count_staged=""
         fi
@@ -186,7 +197,6 @@ alias C5="awk '{print \$5}'"
 alias C6="awk '{print \$6}'"
 alias C7="awk '{print \$7}'"
 alias C8="awk '{print \$8}'"
-
 alias sum="awk '{sum+=\$1} END {print sum}'"
 
 alias rebuild_ctags="cd ~/fbcode/; ctags -R -L ~/.ctags.list --python-kinds=-i"

@@ -1,21 +1,12 @@
 #!/bin/bash
 
 export PATH="$PATH:$HOME/bin"
-
-killall pulseaudio; pulseaudio &
-
+pulseaudio --start
 xsetroot -cursor_name left_ptr
+setxkbmap -option caps:escape
 
-# LightDM does xmodmap for us
-#[[ -f ~/.xmodmaprc ]] && xmodmap ~/.Xmodmap
-
-# LightDM does .Xresources for us
-#[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-
-[[ "$(which xscreensaver)" == "/usr/bin/xscreensaver" ]] && xscreensaver -no-splash &
-
-[[ "$(which nm-applet)" == "/usr/bin/nm-applet" ]] && nm-applet &
-
+[[ "$(which xscreensaver)" == "/usr/bin/xscreensaver" ]] && /usr/bin/xscreensaver -no-splash &
+[[ "$(which nm-applet)" == "/usr/bin/nm-applet" ]] && /usr/bin/nm-applet &
 [[ -f ~/.screenlayout/main.sh ]] && ~/.screenlayout/main.sh
 
 urxvtd -q -o -f &

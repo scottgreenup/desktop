@@ -1,2 +1,4 @@
 "\eOc": forward-word
 "\eOd": backward-word
+TAB:    menu-complete
+"\e[Z": menu-complete-backward

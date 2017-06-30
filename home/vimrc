@@ -4,8 +4,8 @@ set nocompatible
 
 let g:snips_author='Scott Greenup'
 
-set autoindent          " always have autoindent on
-set copyindent          " copy the previous indentation on autoindenting
+"set autoindent          " always have autoindent on
+"set copyindent          " copy the previous indentation on autoindenting
 set display+=lastline
 set expandtab           " <TAB> will insert <softtabstop> spaces
 set hidden              " can edit a new file without saving the first
@@ -21,7 +21,7 @@ set shiftwidth=4        " affects how much > moves
 set showmatch
 set smartcase           " ignore case if lowercaes, else, case-sensitive
 set smartindent
-set softtabstop=4       " affects <TAB> key
+"set softtabstop=4       " affects <TAB> key
 set tabstop=4
 set textwidth=80
 set title               " change terminal title
@@ -169,6 +169,8 @@ let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_flake8_args='--ignore=E402,E501,E711'
 let g:syntastic_python_pyflakes_args='--ignore=E402'
 let g:syntastic_sh_shellcheck_args='-x'
+let g:syntastic_c_compiler_options='--std=c11'
+let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],'passive_filetypes': ['html', 'ejs'] }
 
 let g:powerline_pycmd='py3'
 
@@ -206,3 +208,8 @@ nmap <silent> <c-d>  :bnext<CR>
 nmap <silent> <c-a>  :bprevious<CR>
 
 noremap <F5> <Esc>:syntax sync fromstart<CR>
+
+map <F10> :call CurtineIncSw()<CR>
+
+au BufNewFile,BufRead *.ejs set filetype=html
+
