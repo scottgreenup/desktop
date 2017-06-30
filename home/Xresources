@@ -1,6 +1,6 @@
-!-------------------------------------------------------------------------------
-! Base16 Tomorrow
-! Scheme: Chris Kempson (http://chriskempson.com)
+
+!===============================================================================
+! Base16 Tomorrow Scheme from Chris Kempson (http://chriskempson.com)
 !-------------------------------------------------------------------------------
 #define base00 #1d1f21
 #define base01 #282a2e
@@ -18,45 +18,17 @@
 #define base0D #81a2be
 #define base0E #b294bb
 #define base0F #a3685a
-!
+
 *.foreground:	#c5c8c6
 *.background:	#1d1f21
 *.cursorColor:	#c5c8c6
-!
-! *.color0:       base00
-! *.color1:       base08
-! *.color2:       base0B
-! *.color3:       base0A
-! *.color4:       base0D
-! *.color5:       base0E
-! *.color6:       base0C
-! *.color7:       base05
-!
-! *.color8:       base03
-! *.color9:       base08
-! *.color10:      base0B
-! *.color11:      base0A
-! *.color12:      base0D
-! *.color13:      base0E
-! *.color14:      base0C
-! *.color15:      base07
-!
-! ! Note: colors beyond 15 might not be loaded (e.g., xterm, urxvt),
-! ! use 'shell' template to set these if necessary
-! *.color16:      base09
-! *.color17:      base0F
-! *.color18:      base01
-! *.color19:      base02
-! *.color20:      base04
-! *.color21:      base06
-!-------------------------------------------------------------------------------
 
 !===============================================================================
 ! XFT
 !===============================================================================
 Xft.antialias:              true
 Xft.autohint:               false
-Xft.dpi:                    109
+Xft.dpi:                    110
 Xft.hinting:                true
 Xft.hintstyle:              hintslight
 Xft.rgba:                   rgb
@@ -66,7 +38,7 @@ Xft.rgba:                   rgb
 !===============================================================================
 ! URXVT settings
 !===============================================================================
-urxvt.background:	#1d1f21
+urxvt.background:	        #1d1f21
 urxvt.blurRadius:           10
 urxvt.borderless:           true
 urxvt.buffered:             true
@@ -76,11 +48,11 @@ urxvt.externalBorder:       0
 urxvt.internalBorder:       1
 urxvt.fading:               10
 urxvt.fadeColor:	        #1d1f21
-!urxvt.font:                 xft:Fantasque Sans Mono:size=7:dpi=176
 urxvt.iso14755:             false
 urxvt.iso14755_52:          false
 urxvt.jumpScroll:           false
-urxvt.lineSpace:            1
+!urxvt.letterSpace:          -1
+urxvt.lineSpace:            -1
 urxvt.modifier:             super
 urxvt.pointerBlank:         true
 urxvt.saveLines:            65535
@@ -96,6 +68,7 @@ urxvt.urgentOnBell:         false
 urxvt.visualBell:           false
 !===============================================================================
 
+
 !===============================================================================
 ! XScreenSaver
 !===============================================================================
@@ -109,18 +82,20 @@ xscreensaver.passwd.thermometer.width: 0
 
 Xcursor.size: 16
 
-!URxvt.font:    xft:DejaVu Sans Mono for Powerline:size=13:dpi=96:style=Book
-!URxvt.font:	xft:DejaVu Sans Mono for Powerline:size=7:dpi=96:style=Book
-!URxvt.font:	xft:Inconsolata-g for Powerline:style=g:dpi=96:size=11
-
 urxvt.perl-ext-common:	font-size
 urxvt.keysym.M-equal:	font-size:reset
 urxvt.keysym.M-minus:	font-size:decsave
 urxvt.keysym.M-plus:	font-size:incsave
-URxvt.font:	xft:Anonymous Pro Minus:style=Regular:dpi=101:size=13
-xft*dpi:	101
+
+xft*dpi:        110
 xft*antialias:	true
 xft*autohint:	false
 xft*hinting:	true
-xft*hintstyle:	hintslight
-xft*rgba:	rgb
+!xft*hintstyle:	hintslight
+xft*hintstyle:	hintnone
+xft*rgba:	    rgb
+
+! DPI is smaller due to some DPI bug that is either mulitplying the DPIs or...?
+!URxvt.font:	xft:M+ 1m:style=light:dpi=110:size=12
+!URxvt.font:	xft:Inconsolata-g:style=regular:dpi=110:size=9
+URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=110:size=12

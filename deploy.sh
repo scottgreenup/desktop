@@ -19,6 +19,7 @@ function checkfile() {
 #===============================================================================
 # Color
 #-------------------------------------------------------------------------------
+mkdir --parents "${HOME}/.config"
 checkfile "${HOME}/.config/base16-shell"
 ln -sT\
     "${cwd}/submodules/github.com/chriskempson/base16-shell"\
@@ -62,16 +63,26 @@ checkfile "${HOME}/.vimrc"
 ln -sT "${cwd}/home/vimrc" "/${HOME}/.vimrc"
 #===============================================================================
 
+## [ Awesome WM ] ##
+
+mkdir --parents "${HOME}/.config/awesome"
 checkfile "${HOME}/.config/awesome/rc.lua"
 ln -sTf "${cwd}/home/config/awesome/rc.lua" "${HOME}/.config/awesome/rc.lua"
+ln -sTf "${cwd}/home/config/awesome/themes" "${HOME}/.config/awesome/themes"
 
 checkfile "${HOME}/.config/awesome/assault.lua"
 ln -sfT\
     "${cwd}/submodules/github.com/NuckChorris/assault/awesomewm/assault.lua"\
     "${HOME}/.config/awesome/assault.lua"
 
+ln -sTf\
+    "${cwd}/submodules/github.com/copycat-killer/lain"\
+    "${HOME}/.config/awesome/lain"
+
+## [ Miscellaneous ] ##
+
 if [[ -h "${HOME}/bin" ]]; then
-    rm -rf "${HOME}/bin"
+    rm -rf "${HOME:?}/bin"
 else
     echo "${HOME}/bin is not a symbolic link, please remove and re-run script."
 fi
@@ -93,10 +104,6 @@ ln -sfT "${cwd}/home/inputrc" "${HOME}/.inputrc"
 mkdir --parents "${HOME}/.urxvt/ext"
 checkfile "${HOME}/.urxvt/ext/font-size"
 ln -sTf\
-    "${cwd}/submodules/github.com/majutsushi/urxvt-font-size"\
+    "${cwd}/submodules/github.com/majutsushi/urxvt-font-size/font-size"\
     "${HOME}/.urxvt/ext/font-size"
-
-sudo ln -sfT\
-    "${cwd}/usr/share/awesome/themes/xathereal"\
-    "/usr/share/awesome/themes/xathereal"
 
