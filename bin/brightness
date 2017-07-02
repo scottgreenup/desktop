@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+dir="/sys/class/backlight/intel_backlight"
+max=$(cat "${dir}/max_brightness")
+
+if [ "$#" -eq 0 ]; then
+    curr=$(cat "${dir}/brightness")
+    python -c "print(${curr} / ${max})"
+else
+    goal=${1}
+    goal_actual=$(python -c "print(int(${goal} * ${max}))")
+    sudo tee "${dir}/brightness" <<< "${goal_actual}"
+fi
+
+
+
