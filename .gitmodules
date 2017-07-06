@@ -34,3 +34,6 @@
 [submodule "submodules/github.com/copycat-killer/lain"]
 	path = submodules/github.com/copycat-killer/lain
 	url = https://github.com/copycat-killer/lain.git
+[submodule "submodules/github.com/tomlion/vim-solidity"]
+	path = submodules/github.com/tomlion/vim-solidity
+	url = https://github.com/tomlion/vim-solidity.git

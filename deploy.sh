@@ -56,6 +56,10 @@ ln -sTf\
     "${cwd}/submodules/github.com/tpope/vim-fugitive"\
     "${cwd}/home/vim/bundle/vim-fugitive"
 
+ln -sTf\
+    "${cwd}/submodules/github.com/tomlion/vim-solidity"\
+    "${cwd}/home/vim/bundle/vim-solidity"
+
 checkfile "${HOME}/.vim"
 ln -sT "${cwd}/home/vim" "/${HOME}/.vim"
 
