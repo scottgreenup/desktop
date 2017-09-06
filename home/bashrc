@@ -161,10 +161,10 @@ alias c='clear'
 alias cls="clear && ls -l"
 alias clt="clear && tree"
 alias ls='ls --color=auto'
-alias l='ls -oh'
+alias l='ls -oh --group-directories-first'
 alias lt='ls -lhtc'
-alias la='ls -lha'
-alias ll='ls -l'
+alias la='ls -lha --group-directories-first'
+alias ll='ls -l --group-directories-first'
 alias rm='rm -I'
 alias grep='grep -i --color'
 
