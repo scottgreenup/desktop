@@ -43,22 +43,22 @@ else:
     geo['h'] = '5'
 
 css = {}
-css['original'] = ['#1B1D1E', '#80D4FF', '#333333', '#FFFFFF'];
-css['bright'] = ['#373B41', '#DE935F', '#81A2BE', '#000000'];
+css['original'] = ['#1B1D1E', '#80D4FF', '#333333', '#FFFFFF']
+css['bright'] = ['#373B41', '#DE935F', '#81A2BE', '#000000']
 theme = 'bright'
-sp.call(['dmenu_run',
-    '-l',  '5',
+sp.call([
+    'dmenu_run',
+    '-l', '5',
     '-nb', css[theme][0],
     '-nf', css[theme][1],
     '-sb', css[theme][2],
     '-sf', css[theme][3],
-    '-p',  "",
+    '-p', "",
     '-f',
     '-i',
     '-fn', "DejaVu Sans Mono:size=11:style=Book",
-    '-h',  geo['h'],
-    '-w',  geo['w'],
-    '-x',  geo['x'],
-    '-y',  geo['y']
+    '-h', geo['h'],
+    '-w', geo['w'],
+    '-x', geo['x'],
+    '-y', geo['y']
 ])
-
