@@ -60,6 +60,14 @@ ln -sTf\
     "${cwd}/submodules/github.com/tomlion/vim-solidity"\
     "${cwd}/home/vim/bundle/vim-solidity"
 
+ln -sTf\
+    "${cwd}/submodules/github.com/nvie/vim-flake8"\
+    "${cwd}/home/vim/bundle/vim-flake8"
+
+ln -sTf\
+    "${cwd}/submodules/github.com/ekalinin/Dockerfile"\
+    "${cwd}/home/vim/bundle/Dockerfile"
+
 checkfile "${HOME}/.vim"
 ln -sT "${cwd}/home/vim" "/${HOME}/.vim"
 
