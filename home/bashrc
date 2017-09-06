@@ -153,6 +153,9 @@ alias vim='vim -O'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias please='sudo'
+alias ag="ag --color -H"
+alias less="less -r"
+alias tree="tree -C"
 
 alias c='clear'
 alias cls="clear && ls -l"
@@ -163,7 +166,7 @@ alias lt='ls -lhtc'
 alias la='ls -lha'
 alias ll='ls -l'
 alias rm='rm -I'
-alias grep='grep -i'
+alias grep='grep -i --color'
 
 alias kc="eval \`keychain --eval --agents ssh --timeout 300 --quiet id_rsa\`"
 alias kchour="eval \`keychain --eval --agents ssh --timeout 3600 --quiet id_rsa\`"
