@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+
+"""
+This amazing bit of programming is meant to jive with the images_averages tool.
+That jive is to find duplicate images in a folder... :D
+It is meant to print out the distances between all data lines inputted. Those
+lines are of the format:
+
+    srgb(66,61,39) => filenameA
+    srgb(81,77,78) => filenameB
+    srgb(67,71,82) => filenameC
+    ...
+
+Example use:
+
+    $ images_averages | ./dist.py
+    7e12.png => 8bb4.jpg at    2.000
+    87e9.jpg => a62f.jpg at    3.742
+    570c.jpg => 8417.jpg at    4.123
+
+"""
+
+import math
+import sys
+
+
+class Color:
+
+    def __init__(self, colorstr):
+
+        values = colorstr.split('(')[1][:-1].split(',')
+
+        if colorstr.startswith("srgb"):
+            r, g, b = [int(float(v)) for v in values][:3]
+        else:
+            raise Exception("Unknown color type")
+
+        self.r = r
+        self.g = g
+        self.b = b
+
+    def dist(self, color):
+
+        diff = [
+            color.r - self.r,
+            color.g - self.g,
+            color.b - self.b,
+        ]
+
+        return math.sqrt(sum([d * d for d in diff]))
+
+    def __str__(self):
+        return "Color({},{},{})".format(self.r, self.g, self.b)
+
+
+images = []
+
+for line in sys.stdin:
+    line = line.strip()
+
+    parts = line.split(' => ')
+
+    color = Color(parts[0])
+    filename = parts[1]
+
+    images.append((filename, color))
+
+
+n = []
+
+for i in range(0, len(images) - 1):
+    a = images[i]
+
+    distances = {}
+    for j in range(i + 1, len(images)):
+        b = images[j]
+        if a[0] == b[0]:
+            continue
+
+        distances[a[1].dist(b[1])] = b[0]
+
+    m = min(distances.keys())
+
+    n.append((a[0], distances[m], m))
+
+n = sorted(n, key=lambda x: x[2])
+
+for data in n:
+    print("{} => {} at {: >8.3f}".format(data[0], data[1], data[2]))

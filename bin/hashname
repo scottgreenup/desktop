@@ -1,0 +1,24 @@
+#!/bin/bash
+
+for name in $(ls .); do
+
+    if [[ -d ${name} ]]; then
+        continue
+    fi
+
+    hash=$(shasum -a 1 "$name" | awk '{print $1}')
+    suff=$(echo "$name" | awk -F'.' '{print $NF}')
+
+    next="${hash}.${suff}"
+
+    if [[ "$next" == "$name" ]]; then
+        continue
+    fi
+
+    echo "${next} <= ${name}"
+
+    echo "Are you sure you want to do this?"
+    read -n 1
+
+    mv ${name} ${next}
+done
