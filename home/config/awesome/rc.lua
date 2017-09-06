@@ -92,6 +92,7 @@ programs["editor_cmd"]  = programs["terminal"] .. " -e " .. programs["editor"]
 
 local layouts = {
     awful.layout.suit.tile,
+    lain.layout.centerwork,
     awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier
@@ -114,6 +115,7 @@ end
 screen_map = {}
 table.insert(screen_map, 1)
 
+-- Work out the ordering for alt-s, alt-d, and alt-f
 for i = 2, screen.count() do
     gi = screen[i].geometry
     inserted = false
@@ -205,6 +207,23 @@ widget_tmp:set_image(beautiful.widget_tmp)
 tmpwidget = wibox.widget.background()
 tmpwidget:set_widget(tmp_widget)
 tmpwidget:set_bgimage(beautiful.widget_display)
+
+-- | BAT | --
+
+
+battery_widget = lain.widget.bat({
+    settings = function()
+        widget:set_markup(space3 .. bat_now.perc .. "%" .. markup.font("Tamsyn 4", " "))
+    end
+})
+
+-- widget_bat = wibox.widget.imagebox()
+-- widget_bat:set_image(beautiful.widget_bat)
+
+batwidget = wibox.widget.background()
+batwidget:set_widget(battery_widget.widget)
+batwidget:set_bgimage(beautiful.widget_display)
+
 
 -- | MEM | --
 
@@ -393,6 +412,13 @@ for s = 1, screen.count() do
 
     right_layout:add(spr)
 
+    right_layout:add(widget_display_l)
+    right_layout:add(batwidget)
+    right_layout:add(widget_display_r)
+    right_layout:add(spr5px)
+
+    right_layout:add(spr)
+
     right_layout:add(widget_fs)
     right_layout:add(widget_display_l)
     right_layout:add(fswidget)
@@ -465,6 +491,17 @@ function force_focus(_screen)
     end
 end
 
+function reset_to_primary()
+    for k, v in pairs(shared_tag_list) do
+        awful.tag.setproperty(v, "hide", true)
+        v.screen = 1
+        awful.tag.setproperty(v, "hide", false)
+    end
+
+    awful.tag.viewnone(screen[1])
+    awful.tag.viewmore({shared_tag_list[1]})
+end
+
 --local scratchpad_scr = screen.fake_add(0, 0, 1920, 1080)
 --local spotify_tag = awful.tag.add(
 --    "spotify", {
@@ -486,11 +523,37 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
+            --local c = client.focus
+            --awful.client.focus.bydirection("down")
+
+            --debug_print("down")
+            --
+            --if c == client.focus then
+            --    awful.client.focus.bydirection("right")
+            --    debug_print("right")
+            --
+            --    if c == client.focus then
+            --        awful.client.focus.byidx( 1)
+            --        debug_print("+1")
+            --        return
+            --    end
+            --
+            --    c = client.focus
+            --    awful.client.focus.bydirection("up")
+            --    debug_print("up")
+            --    while c ~= client.focus do
+            --        awful.client.focus.bydirection("up")
+            --        debug_print("up")
+            --    end
+            --end
+
+            --debug_print("raise")
             if client.focus then client.focus:raise() end
         end),
     awful.key({ modkey,           }, "k",
         function ()
             awful.client.focus.byidx(-1)
+            --awful.client.focus.bydirection("up")
             if client.focus then client.focus:raise() end
         end),
 
@@ -501,6 +564,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "s", function () focus_on_screen(1, screen_map) end),
     awful.key({ modkey,           }, "d", function () focus_on_screen(2, screen_map) end),
     awful.key({ modkey,           }, "f", function () focus_on_screen(3, screen_map) end),
+    awful.key({ modkey, "Shift"   }, "t", function () reset_to_primary() end),
 
     -- Standard program
     awful.key({ "Mod4",           }, "w", function ()       spawn_program(programs["browser"]) end),
@@ -562,15 +626,70 @@ function move_client_to_screen(c, x, screen_map)
     end
 end
 
+function select_next(c)
+    local scr = c.screen
+
+    if #scr.get_clients() == 1 then
+        return
+    end
+
+    if c.floating then
+        awful.client.focus.byidx(1)
+        if client.focus then
+            client.focus:raise()
+        end
+        return
+    end
+
+    idx = awful.client.idx(c)
+
+    if idx == nil then
+        awful.client.focus.byidx(1)
+        if client.focus then
+            client.focus:raise()
+        end
+        return
+    end
+
+    -- if the index of the client is the last index of the column, go up
+    if idx["idx"] == idx["num"] then
+        awful.client.focus.byidx(-1)
+        if client.focus then
+            client.focus:raise()
+        end
+    else
+        awful.client.focus.byidx(1)
+        if client.focus then
+            client.focus:raise()
+        end
+    end
+end
+
+function kill_select(c)
+    select_next(c)
+    c:kill()
+end
+
+client.connect_signal("focus", function(c)
+    -- do nothing
+end)
+
+client.connect_signal("unmanage", function(c)
+    if #c.screen.clients > 0 then
+        client.focus = c.screen.clients[1]
+    end
+end)
+
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",       function (c) c.fullscreen = not c.fullscreen  end),
-    awful.key({ modkey, "Shift"   }, "c",       function (c) c:kill()                         end),
-    awful.key({ modkey,           }, "t",       awful.client.floating.toggle                     ),
+    --awful.key({ modkey, "Shift"   }, "c",       function (c) c:kill()                         end),
+    awful.key({ modkey, "Shift"   }, "c",       function (c) kill_select(c) end),
+    awful.key({ modkey,           }, "t",       awful.client.floating.toggle ),
     awful.key({ modkey,           }, "Return",  function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey, "Shift"   }, "s",       function (c) move_client_to_screen(c, 1, screen_map) end),
     awful.key({ modkey, "Shift"   }, "d",       function (c) move_client_to_screen(c, 2, screen_map) end),
     awful.key({ modkey, "Shift"   }, "f",       function (c) move_client_to_screen(c, 3, screen_map) end),
-    awful.key({ modkey,           }, "y",       function (c) c.ontop = not c.ontop            end),
+    awful.key({ modkey,           }, "y",       function (c) c.ontop = not c.ontop end),
     awful.key({ modkey,           }, "n",
         function (c)
             c.minimized = true

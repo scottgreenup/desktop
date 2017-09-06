@@ -23,9 +23,9 @@ theme.clockgf    = "#d5d5c3"
 
 -- | Borders | --
 
-theme.useless_gap = 2
+theme.useless_gap = 0
 theme.gap_single_client = false
-theme.border_width  = 1
+theme.border_width  = 2
 theme.border_normal = "#000000"
 theme.border_focus  = "#FF6666"
 theme.border_marked = "#91231c"
