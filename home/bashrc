@@ -185,6 +185,21 @@ alias gl="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset 
 alias gla="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
 alias gll="/usr/bin/git log --date-order --graph --oneline"
 
+# Docker
+alias d="/usr/bin/sudo /usr/bin/docker"
+alias de="/usr/bin/sudo /usr/bin/docker exec"
+alias dc="/usr/bin/sudo /usr/bin/docker container"
+alias dca="/usr/bin/sudo /usr/bin/docker container attach"
+alias dps="/usr/bin/sudo /usr/bin/docker container ls -a --format \"table {{.Names}} \t {{.Image}} \t {{.RunningFor}} \t {{.Status}} \t {{.Ports}}\" "
+
+function dsh () {
+    /usr/bin/sudo /usr/bin/docker exec -it $1 /bin/sh
+}
+
+# Docker Compose
+alias dk="/usr/bin/sudo /usr/bin/docker-compose"
+alias dkps="/usr/bin/sudo /usr/bin/docker-compose ps"
+
 alias feh="feh --auto-zoom --borderless --draw-filename --geometry 800x600"
 
 alias src="source ~/.bashrc"
