@@ -217,4 +217,15 @@ alias C7="awk '{print \$7}'"
 alias C8="awk '{print \$8}'"
 alias sum="awk '{sum+=\$1} END {print sum}'"
 
-alias rebuild_ctags="cd ~/fbcode/; ctags -R -L ~/.ctags.list --python-kinds=-i"
+function va() {
+    for dir in .venv venv; do
+        if [[ -d $dir ]]; then
+            source "${dir}/bin/activate"
+            return 0
+        fi
+    done
+    echo "Failed to activate virtual environment."
+    return 1
+}
+
+alias rebuild_ctags="cd ~/dev/; ctags -R --python-kinds=-i"
