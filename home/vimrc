@@ -18,6 +18,7 @@ set number              " shows the number of the cursor line
 set relativenumber      " shows relative distance between lines
 set ruler               " bottom-right line,column number
 set shiftwidth=4        " affects how much > moves
+set showbreak=⇇
 set showmatch
 set smartcase           " ignore case if lowercaes, else, case-sensitive
 set smartindent
@@ -27,6 +28,7 @@ set textwidth=80
 set title               " change terminal title
 set undolevels=5000     " more levels of undos
 set visualbell          " don't beep
+set t_vb=
 set wildmenu            " autocomplete for command menu
 
 set nobackup
@@ -62,8 +64,12 @@ filetype plugin on
 filetype indent on
 let g:tex_flavor='latex'
 
+" Set filetypes for weird languages and abnormal filetype suffix
+au BufNewFile,BufRead *.ejs set filetype=html
+au BufNewFile,BufRead *.docker set filetype=Dockerfile
+au BufNewFile,BufRead *.compose set filetype=docker-compose
 
-
+" We hit shift-; to get : and then w... sometimes the shift isn't quite up yet..
 command! WQA :wqa
 command! WqA :wqa
 command! WQa :wqa
@@ -81,14 +87,9 @@ command! QA :qa
 command! Qa :qa
 command! Q :q
 
-nmap <silent> <c-n> :NERDTreeToggle<CR>
-map <F7> :w<CR>:!ispell -x -d british %<CR><CR>:e<CR><CR>
-let NERDTreeShowBookmarks = 1
-let NERDTreeIgnore = ['\.pyc$','__pycache']
-
-" Reomve the help key.
-noremap  <F1> :set invfullscreen<CR>
-inoremap <F1> <ESC>:set invfullscreen<CR>a
+" Remove the help key.
+noremap  <F1> <nop>
+inoremap <F1> <nop>
 
 " Remove the hash key.
 inoremap # X<BS>#
@@ -104,11 +105,8 @@ nnoremap k gk
 " Remove highlights on F12
 nnoremap <silent> <F12> :noh<cr>
 
+" When the filetype is a gitcommit, open up the diff as a :vs
 autocmd FileType gitcommit DiffGitCached | wincmd L | wincmd p
-
-"au BufRead,BufNewFile *.ts set filetype=javascript
-
-let g:statline_syntastic = 0
 
 " Pathogen for third-party libraries
 call pathogen#infect()
@@ -118,6 +116,8 @@ call pathogen#helptags()
 hi Normal ctermbg=None
 
 "===============================================================================
+" CTags
+"-------------------------------------------------------------------------------
 " ctags setup
 set tags=tags;
 
@@ -150,28 +150,49 @@ function! EditTarget()
     execute "vsplit " . basepath
 endfunction
 nnoremap <Leader>t :call EditTarget()<CR>
+"===============================================================================
 
-set statusline+=%f
+set statusline+=[%f]
 
-" Syntastic
+
+" Syntastic statusline
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_javascript_checkers = ['eslint']
-"let g:syntastic_javascript_eslint_exec = '/usr/bin/eslint'
-" 402 - imports have to be first
-" 501 - lines have to be less than 80.
-let g:syntastic_python_flake8_args='--ignore=E402,E501,E711'
-let g:syntastic_python_pyflakes_args='--ignore=E402'
-let g:syntastic_sh_shellcheck_args='-x'
-let g:syntastic_c_compiler_options='--std=c11'
-let g:syntastic_mode_map = { 'mode': 'active', 'active_filetypes': [],'passive_filetypes': ['html', 'ejs'] }
+" Syntastic global configuration
+let g:statline_syntastic = 0
 
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 1
+let g:syntastic_enable_highlighting = 1
+let g:syntastic_enable_signs = 1
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_mode_map = {
+    \'mode': 'active',
+    \'active_filetypes': [],
+    \'passive_filetypes': ['html', 'ejs', 'tex']
+\}
+
+silent! nmap <F6> :SyntasticToggleMode<CR>
+
+
+" Syntastic - CPP
+let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_compiler_options = '--std=c++11'
+
+" Syntastic - C
+let g:syntastic_c_compiler = 'clang'
+let g:syntastic_c_compiler_options = '--std=c11'
+
+" Syntastic - Python
+let g:syntastic_python_flake8_args = '--ignore=E402,E501,E711'
+let g:syntastic_python_pyflakes_args = '--ignore=E402'
+let g:syntastic_sh_shellcheck_args = '-x'
+
+" Powerline
 let g:powerline_pycmd='py3'
 
 if !exists('g:airline_symbols')
@@ -187,29 +208,65 @@ let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
 
 "-------------------------------------------------------------------------------
+" Vim-Go
+"-------------------------------------------------------------------------------
+let g:go_disable_autoinstall = 0
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+
+"===============================================================================
 " Leader customisations
+"-------------------------------------------------------------------------------
+"===============================================================================
+
+"===============================================================================
+" NerdTree
+"-------------------------------------------------------------------------------
+nmap <silent> <c-n> :NERDTreeToggle<CR>
+let NERDTreeShowBookmarks = 1
+let NERDTreeIgnore = ['\.pyc$','__pycache']
+
+" Change working directory to be the directory of the focused file in NERDTree
+nmap <silent> <leader>w  :cd %:p%h<CR>
+
+" NERDTree will move to the current files location
+nnoremap <leader>r :NERDTreeFind<CR>
+"===============================================================================
+
+"===============================================================================
+" Random Remappings
 "-------------------------------------------------------------------------------
 " Quickly reload the vimrc file nmap <silent> <leader>ev :e  $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-" Toggle functionalities
+" Toggle numbers with \n
 nmap <silent> <leader>n  :set nonu! <bar> set nornu!<CR>
+
+" Toggle paste with \p
 nmap <silent> <leader>p  :set nopaste!<CR>
 
-" Change working directotry to be the directory of the focused file
-nmap <silent> <leader>w  :cd %:p%h<CR>
-
-" NERDTree will move to the current files location
-nnoremap <leader>r :NERDTreeFind<CR>
-"-------------------------------------------------------------------------------
-
+" Faster buffer movement
 nmap <silent> <c-d>  :bnext<CR>
 nmap <silent> <c-a>  :bprevious<CR>
 
+" Refresh syntax with <F5>
 noremap <F5> <Esc>:syntax sync fromstart<CR>
 
+"
+map <F7> :w<CR>:!ispell -x -d british %<CR><CR>:e<CR><CR>
 map <F10> :call CurtineIncSw()<CR>
+nnoremap Q <nop>
+"===============================================================================
 
-au BufNewFile,BufRead *.ejs set filetype=html
+autocmd FileType python nnoremap K :<C-u>let save_isk = &iskeyword \|
+    \ set iskeyword+=. \|
+    \ execute "!pydoc " . expand("<cword>") \|
+    \ let &iskeyword = save_isk<CR>
+
+
+
 
