@@ -163,8 +163,8 @@ alias ll='ls -l --group-directories-first'
 alias rm='rm -I'
 alias grep='grep -i --color'
 
-alias kc="eval \`keychain --eval --agents ssh --timeout 300 --quiet id_rsa\`"
-alias kchour="eval \`keychain --eval --agents ssh --timeout 3600 --quiet id_rsa\`"
+alias kc="eval \`keychain --eval --agents ssh --timeout 5 --quiet id_rsa\`"
+alias kchour="eval \`keychain --eval --agents ssh --timeout 60 --quiet id_rsa\`"
 
 # Aliases for Git:
 alias g='/usr/bin/git status'
