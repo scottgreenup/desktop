@@ -37,3 +37,9 @@
 [submodule "submodules/github.com/tomlion/vim-solidity"]
 	path = submodules/github.com/tomlion/vim-solidity
 	url = https://github.com/tomlion/vim-solidity.git
+[submodule "submodules/github.com/ekalinin/Dockerfile"]
+	path = submodules/github.com/ekalinin/Dockerfile
+	url = https://github.com/ekalinin/Dockerfile.vim.git
+[submodule "submodules/github.com/nvie/vim-flake8"]
+	path = submodules/github.com/nvie/vim-flake8
+	url = git@github.com:nvie/vim-flake8.git
