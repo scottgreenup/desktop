@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git submodule update --init --recursive
+#git submodule update --init --recursive
 
 cwd=$(pwd)
 
@@ -68,6 +68,15 @@ ln -sTf\
     "${cwd}/submodules/github.com/ekalinin/Dockerfile"\
     "${cwd}/home/vim/bundle/Dockerfile"
 
+ln -sTf\
+    "${cwd}/submodules/github.com/junegunn/fzf"\
+    "${cwd}/home/vim/bundle/vim-fzf"\
+
+ln -sTf\
+    "${cwd}/submodules/github.com/airblade/vim-gitgutter"\
+    "${cwd}/home/vim/bundle/vim-gitgutter"\
+
+
 checkfile "${HOME}/.vim"
 ln -sT "${cwd}/home/vim" "/${HOME}/.vim"
 
@@ -86,10 +95,10 @@ checkfile "${HOME}/.config/awesome/assault.lua"
 ln -sfT\
     "${cwd}/submodules/github.com/NuckChorris/assault/awesomewm/assault.lua"\
     "${HOME}/.config/awesome/assault.lua"
-#
-#ln -sTf\
-#    "${cwd}/submodules/github.com/copycat-killer/lain"\
-#    "${HOME}/.config/awesome/lain"
+
+ln -sTf\
+    "${cwd}/submodules/github.com/scottgreenup/lain"\
+    "${HOME}/.config/awesome/lain"
 
 ## [ Miscellaneous ] ##
 
@@ -108,6 +117,10 @@ checkfile "${HOME}/.xprofile"
 ln -sfT "${cwd}/home/xprofile"   "${HOME}/.xprofile"
 checkfile "${HOME}/.bashrc"
 ln -sfT "${cwd}/home/bashrc"     "${HOME}/.bashrc"
+
+checkfile "${HOME}/.bash_aliases"
+ln -sfT "${cwd}/home/bash_aliases"     "${HOME}/.bash_aliases"
+
 checkfile "${HOME}/.Xresources"
 ln -sfT "${cwd}/home/Xresources" "${HOME}/.Xresources"
 checkfile "${HOME}/.inputrc"

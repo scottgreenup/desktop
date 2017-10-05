@@ -92,7 +92,7 @@ programs["editor_cmd"]  = programs["terminal"] .. " -e " .. programs["editor"]
 
 local layouts = {
     awful.layout.suit.tile,
-    lain.layout.centerwork,
+    lain.layout.centerwork_leftright,
     awful.layout.suit.max,
     awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier
@@ -289,16 +289,12 @@ clockwidget = wibox.widget.background()
 clockwidget:set_widget(mytextclock)
 clockwidget:set_bgimage(beautiful.widget_display)
 
-local index = 1
-local loop_widgets = { mytextclock, mytextcalendar }
-local loop_widgets_icons = { beautiful.widget_clock, beautiful.widget_cal }
+widget_date = wibox.widget.imagebox()
+widget_date:set_image(beautiful.widget_cal)
 
-clockwidget:buttons(awful.util.table.join(awful.button({}, 1,
-    function ()
-        index = index % #loop_widgets + 1
-        clockwidget:set_widget(loop_widgets[index])
-        widget_clock:set_image(loop_widgets_icons[index])
-    end)))
+datewidget = wibox.widget.background()
+datewidget:set_widget(mytextcalendar)
+datewidget:set_bgimage(beautiful.widget_display)
 
 -- | Task List | --
 
@@ -440,6 +436,10 @@ for s = 1, screen.count() do
     right_layout:add(widget_clock)
     right_layout:add(widget_display_l)
     right_layout:add(clockwidget)
+    right_layout:add(widget_display_r)
+    right_layout:add(widget_date)
+    right_layout:add(widget_display_l)
+    right_layout:add(datewidget)
     right_layout:add(widget_display_r)
     right_layout:add(spr5px)
 

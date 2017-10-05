@@ -1,7 +1,9 @@
 # Desktop
 
-These are my updated dotfiles with a clean and safe deploy script. This will
-symbolically link config files for:
+These are my updated dotfiles, that I am using on a daily basis.
+
+This comes with a clean and "safe" deploy script. This will symbolically link
+config files for, and more; please read the `./deploy.sh` script.
 
  - Terminal Coloring
  - Xresources
@@ -13,7 +15,7 @@ symbolically link config files for:
 
 ## Installation
 
-Use `deploy.sh`
+Use `./deploy.sh` after installing the packages from `./packages`
 
 ## Adding Submodule
 

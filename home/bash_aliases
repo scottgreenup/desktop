@@ -1,0 +1,105 @@
+
+alias src="source ~/.bashrc"
+
+# Behaviour correction
+function ifconfig() {
+    echo "ifconfig is deprecated"
+    echo "use 'ip addr show' or 'ip a' for short"
+}
+
+# Specialized commands
+alias murder="shred -uvzn 20"
+alias fucking="sudo"
+alias please='sudo'
+
+# Common code commands
+alias vim='vim -O'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ag="ag --color -H"
+alias tree="tree -C"
+
+alias py2='python2'
+alias py3='python3'
+
+# Columns!
+alias C1="awk '{print \$1}'"
+alias C2="awk '{print \$2}'"
+alias C3="awk '{print \$3}'"
+alias C4="awk '{print \$4}'"
+alias C5="awk '{print \$5}'"
+alias C6="awk '{print \$6}'"
+alias C7="awk '{print \$7}'"
+alias C8="awk '{print \$8}'"
+alias sum="awk '{sum+=\$1} END {print sum}'"
+
+# Common command line commands
+alias c='clear'
+alias cls="clear && ls -l"
+alias clt="clear && tree"
+alias less="less -r"
+alias ls='ls --color=auto'
+alias l='ls -oh --group-directories-first'
+alias lt='ls -lhtc'
+alias la='ls -lha --group-directories-first'
+alias ll='ls -l --group-directories-first'
+alias rm='rm -i'
+alias cp='cp -i'
+alias grep='grep -i --color'
+
+# Keychain commands
+alias kc="eval \`keychain --eval --agents ssh --timeout 5 --quiet id_rsa\`"
+alias kchour="eval \`keychain --eval --agents ssh --timeout 60 --quiet id_rsa\`"
+
+# Aliases for Git
+alias g='/usr/bin/git status'
+alias gu='/usr/bin/git pull'
+alias gp='/usr/bin/git push'
+alias ga='/usr/bin/git add'
+alias gd='/usr/bin/git diff'
+alias gb='/usr/bin/git branch'
+alias gba='/usr/bin/git branch -a'
+alias gc='/usr/bin/git commit'
+alias gca='/usr/bin/git commit -a'
+alias gco='/usr/bin/git checkout'
+alias gm="/usr/bin/git merge --no-ff"
+alias gff="/usr/bin/git merge --ff-only"
+alias gl="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
+alias gla="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
+alias gll="/usr/bin/git log --date-order --graph --oneline"
+
+# Docker
+alias d="/usr/bin/sudo /usr/bin/docker"
+alias dn="/usr/bin/sudo /usr/bin/docker network"
+alias de="/usr/bin/sudo /usr/bin/docker exec"
+alias dc="/usr/bin/sudo /usr/bin/docker container"
+alias dca="/usr/bin/sudo /usr/bin/docker container attach"
+alias dps="/usr/bin/sudo /usr/bin/docker container ls --format \"table {{.Names}} \t {{.Image}} \t {{.RunningFor}} \t {{.Status}} \t {{.Ports}}\" "
+
+function dsh () {
+    /usr/bin/sudo /usr/bin/docker exec -it $1 /bin/sh
+}
+
+# Docker Compose
+alias dk="/usr/bin/sudo /usr/bin/docker-compose"
+alias dkps="/usr/bin/sudo /usr/bin/docker-compose ps"
+
+# Applications
+alias feh="feh --auto-zoom --borderless --draw-filename --geometry 800x600"
+alias ffplay="ffplay -nodisp"
+
+export FZF_DEFAULT_COMMAND='ag -g ""'
+alias fzf="fzf --preview='cat {}'"
+
+function va() {
+    for dir in .venv venv; do
+        if [[ -d $dir ]]; then
+            source "${dir}/bin/activate"
+            return 0
+        fi
+    done
+    echo "Failed to activate virtual environment."
+    return 1
+}
+
+alias rebuild_ctags="cd ~/dev/; ctags -R --python-kinds=-i"
