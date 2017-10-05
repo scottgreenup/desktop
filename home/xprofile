@@ -9,4 +9,6 @@ setxkbmap -option caps:escape
 [[ "$(which nm-applet)" == "/usr/bin/nm-applet" ]] && /usr/bin/nm-applet &
 [[ -f ~/.screenlayout/main.sh ]] && ~/.screenlayout/main.sh
 
+which compton && compton -b
+
 urxvtd -q -o -f &
