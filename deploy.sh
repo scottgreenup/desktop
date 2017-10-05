@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-git submodule update --init --recursive
+#git submodule update --init --recursive
 
 cwd=$(pwd)
 
@@ -67,6 +67,15 @@ ln -sTf\
 ln -sTf\
     "${cwd}/submodules/github.com/ekalinin/Dockerfile"\
     "${cwd}/home/vim/bundle/Dockerfile"
+
+ln -sTf\
+    "${cwd}/submodules/github.com/junegunn/fzf"\
+    "${cwd}/home/vim/bundle/vim-fzf"\
+
+ln -sTf\
+    "${cwd}/submodules/github.com/airblade/vim-gitgutter"\
+    "${cwd}/home/vim/bundle/vim-gitgutter"\
+
 
 checkfile "${HOME}/.vim"
 ln -sT "${cwd}/home/vim" "/${HOME}/.vim"

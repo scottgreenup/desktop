@@ -43,3 +43,9 @@
 [submodule "submodules/github.com/nvie/vim-flake8"]
 	path = submodules/github.com/nvie/vim-flake8
 	url = git@github.com:nvie/vim-flake8.git
+[submodule "submodules/github.com/junegunn/fzf"]
+	path = submodules/github.com/junegunn/fzf
+	url = https://github.com/junegunn/fzf.vim
+[submodule "submodules/github.com/airblade/vim-gitgutter"]
+	path = submodules/github.com/airblade/vim-gitgutter
+	url = https://github.com/airblade/vim-gitgutter.git
