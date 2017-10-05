@@ -108,6 +108,10 @@ checkfile "${HOME}/.xprofile"
 ln -sfT "${cwd}/home/xprofile"   "${HOME}/.xprofile"
 checkfile "${HOME}/.bashrc"
 ln -sfT "${cwd}/home/bashrc"     "${HOME}/.bashrc"
+
+checkfile "${HOME}/.bash_aliases"
+ln -sfT "${cwd}/home/bash_aliases"     "${HOME}/.bash_aliases"
+
 checkfile "${HOME}/.Xresources"
 ln -sfT "${cwd}/home/Xresources" "${HOME}/.Xresources"
 checkfile "${HOME}/.inputrc"

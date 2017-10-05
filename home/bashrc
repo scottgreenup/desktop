@@ -13,6 +13,8 @@ setxkbmap -option caps:escape
 # This just ensures everything is there.
 xrdb ~/.Xresources
 
+source ~/.bash_aliases
+
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
