@@ -66,6 +66,7 @@ let g:tex_flavor='latex'
 
 " Set filetypes for weird languages and abnormal filetype suffix
 au BufNewFile,BufRead *.ejs set filetype=html
+au BufNewFile,BufRead *.ts set filetype=javascript
 au BufNewFile,BufRead *.docker set filetype=Dockerfile
 au BufNewFile,BufRead *.compose set filetype=docker-compose
 
