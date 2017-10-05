@@ -49,3 +49,6 @@
 [submodule "submodules/github.com/airblade/vim-gitgutter"]
 	path = submodules/github.com/airblade/vim-gitgutter
 	url = https://github.com/airblade/vim-gitgutter.git
+[submodule "submodules/github.com/scottgreenup/lain"]
+	path = submodules/github.com/scottgreenup/lain
+	url = https://github.com/scottgreenup/lain.git
