@@ -1,3 +1,4 @@
+#!/bin/bash
 
 alias src="source ~/.bashrc"
 
@@ -54,12 +55,12 @@ alias kchour="eval \`keychain --eval --agents ssh --timeout 60 --quiet id_rsa\`"
 # Aliases for Git
 alias g='/usr/bin/git status'
 alias gu='/usr/bin/git pull'
-alias gp='/usr/bin/git push'
+#alias gp='/usr/bin/git push'
 alias ga='/usr/bin/git add'
 alias gd='/usr/bin/git diff'
 alias gb='/usr/bin/git branch'
 alias gba='/usr/bin/git branch -a'
-alias gc='/usr/bin/git commit'
+#alias gc='/usr/bin/git commit'
 alias gca='/usr/bin/git commit -a'
 alias gco='/usr/bin/git checkout'
 alias gm="/usr/bin/git merge --no-ff"
@@ -67,6 +68,39 @@ alias gff="/usr/bin/git merge --ff-only"
 alias gl="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 alias gla="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
 alias gll="/usr/bin/git log --date-order --graph --oneline"
+alias gs="/usr/bin/git submodule"
+
+function gc() {
+    if git status &>/dev/null; then
+        user_name=$(git config user.name)
+        user_mail=$(git config user.email)
+        user="${user_name} <${user_mail}>"
+        echo -e "Committing as -- ${user}\n\nDo this? (enter)"
+        read -n 1
+    fi
+
+    /usr/bin/git commit "$@"
+}
+
+function gca() {
+    if git status &>/dev/null; then
+        user_name=$(git config user.name)
+        user_mail=$(git config user.email)
+        user="${user_name} <${user_mail}>"
+        echo -e "Committing as -- ${user}\n\nDo this? (enter)"
+        read -n 1
+    fi
+
+    /usr/bin/git commit -a "$@"
+}
+
+function gp() {
+    if /usr/bin/git status &>/dev/null; then
+        /usr/bin/git push -nv 2>&1 | head -n -1
+        echo -e "\nDo this? (enter)"
+        read -n 1
+    fi
+}
 
 # Docker
 alias d="/usr/bin/sudo /usr/bin/docker"
