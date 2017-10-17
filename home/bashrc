@@ -91,7 +91,6 @@ function bash_prompt() {
             fi
         done < <(git status -s)
 
-
         if [[ ${count_untracked} != 0 ]]; then
             count_untracked=" $(color 3)...${count_untracked}$(reset_color)"
         else
