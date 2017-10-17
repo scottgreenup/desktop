@@ -225,6 +225,7 @@ function base16 () {
 base16
 
 # Environment variables
-export PATH="$PATH:~/arc/arcanist/bin/"
+export PATH="$PATH:$HOME/arc/arcanist/bin/"
+export PATH="$PATH:$HOME/go/bin"
 export TERM='rxvt-256color'
 export EDITOR='vim'
