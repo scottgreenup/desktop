@@ -19,31 +19,31 @@
 #define base0E #b294bb
 #define base0F #a3685a
 
-*.foreground:	base05
-*.background:	base00
-*.cursorColor:	base05
-*.color0:       base00
-*.color1:       base08
-*.color2:       base0B
-*.color3:       base0A
-*.color4:       base0D
-*.color5:       base0E
-*.color6:       base0C
-*.color7:       base05
-*.color8:       base03
-*.color9:       base08
-*.color10:      base0B
-*.color11:      base0A
-*.color12:      base0D
-*.color13:      base0E
-*.color14:      base0C
-*.color15:      base07
-*.color16:      base09
-*.color17:      base0F
-*.color18:      base01
-*.color19:      base02
-*.color20:      base04
-*.color21:      base06
+*.foreground:	#c5c8c6
+*.background:	#1d1f21
+*.cursorColor:	#c5c8c6
+*.color0:	#1d1f21
+*.color1:	#cc6666
+*.color2:	#b5bd68
+*.color3:	#f0c674
+*.color4:	#81a2be
+*.color5:	#b294bb
+*.color6:	#8abeb7
+*.color7:	#c5c8c6
+*.color8:	#969896
+*.color9:	#cc6666
+*.color10:	#b5bd68
+*.color11:	#f0c674
+*.color12:	#81a2be
+*.color13:	#b294bb
+*.color14:	#8abeb7
+*.color15:	#ffffff
+*.color16:	#de935f
+*.color17:	#a3685a
+*.color18:	#282a2e
+*.color19:	#373b41
+*.color20:	#b4b7b4
+*.color21:	#e0e0e0
 
 !===============================================================================
 ! XFT
@@ -59,21 +59,19 @@ Xft.rgba:                   rgb
 !===============================================================================
 ! URXVT settings
 !===============================================================================
-urxvt.background:	        [60]base00
+urxvt.background:	        [100]#1d1f21
 urxvt.blurRadius:           10
 urxvt.borderless:           true
 urxvt.buffered:             true
 urxvt.cursorBlink:          true
 urxvt.depth:                32
 urxvt.externalBorder:       0
-urxvt.internalBorder:       1
+urxvt.internalBorder:       3
 urxvt.fading:               false
 urxvt.fadeColor:	        #1d1f21
 urxvt.iso14755:             false
 urxvt.iso14755_52:          false
 urxvt.jumpScroll:           false
-urxvt.letterSpace:          -1
-urxvt.lineSpace:            -1
 urxvt.modifier:             super
 urxvt.pointerBlank:         true
 urxvt.saveLines:            65535
@@ -115,4 +113,7 @@ xft*hinting:	true
 xft*hintstyle:	hintslight
 xft*rgba:	    rgb
 
-URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=110:size=10
+urxvt.letterSpace:          -1
+urxvt.lineSpace:            -1
+
+URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=110:size=11

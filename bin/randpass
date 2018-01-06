@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+
+import secrets
+
+lower_case = 'abcdefghijklmnopqrstuvwxyz'
+upper_case = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+numbers = '1234567890'
+#symbols = '!@#$%^&*()_+-=~`{}[]|;:",./?><'
+
+choices = lower_case + upper_case + numbers
+
+print("".join([secrets.choice(choices) for x in range(0, 32)]))

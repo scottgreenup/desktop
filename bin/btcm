@@ -1,0 +1,30 @@
+#!/usr/bin/env python
+
+import argparse
+
+parser = argparse.ArgumentParser(
+    description='Calculate how much CC you need to buy.')
+parser.add_argument(
+    '--price', type=float,
+    help='The price of the currency')
+parser.add_argument(
+    '--dollars', type=float,
+    help='The dollars you want to spend')
+parser.add_argument(
+    '--fee', type=float,
+    help='The fee as a percentage')
+args = parser.parse_args()
+
+feeRate = (args.fee + 0.1) / 100
+dollars = args.dollars / (1 + feeRate)
+
+print(feeRate)
+print(dollars)
+
+assert (dollars + dollars * feeRate) == args.dollars
+
+cost = (dollars / args.price) + (dollars / args.price) * feeRate
+
+print(cost)
+print(cost * args.price)
+

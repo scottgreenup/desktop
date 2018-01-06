@@ -229,3 +229,18 @@ export PATH="$PATH:$HOME/arc/arcanist/bin/"
 export PATH="$PATH:$HOME/go/bin"
 export TERM='rxvt-256color'
 export EDITOR='vim'
+
+export HISTFILESIZE=500000
+export HISTCONTROL=ignoreboth
+export HISTSIZE=500000
+
+# &    => ignore duplicate commands
+# [ ]* => ignore commands starting with a space
+# exit => forget exit
+export HISTIGNORE="&:[ ]*:exit:ls:clear:l:la:c:gla:g"
+export HISTTIMEFORMAT='%F %T '
+
+shopt -s histappend
+PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+source "/usr/bin/virtualenvwrapper.sh" 1>/dev/null

@@ -83,7 +83,7 @@ local modkey = "Mod1"
 
 -- This is used later as the default terminal and editor to run.
 programs = {}
-programs["browser"]     = "chromium"
+programs["browser"]     = "firefox"
 programs["terminal"]    = "urxvt"
 programs["lock"]        = "xscreensaver-command --lock"
 programs["randr"]       = "arandr"

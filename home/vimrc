@@ -164,17 +164,21 @@ set statusline+=%*
 " Syntastic global configuration
 let g:statline_syntastic = 0
 
-let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_always_populate_loc_list = 0
 let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 1
+"let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
+"let g:syntastic_check_on_wq = 1
+let g:syntastic_check_on_wq = 0
 let g:syntastic_enable_highlighting = 1
 let g:syntastic_enable_signs = 1
 let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exe = './node_modules/.bin/eslint'
 let g:syntastic_mode_map = {
     \'mode': 'active',
     \'active_filetypes': [],
-    \'passive_filetypes': ['html', 'ejs', 'tex']
+    \'passive_filetypes': ['html', 'ejs', 'tex', 'python']
 \}
 
 silent! nmap <F6> :SyntasticToggleMode<CR>
@@ -250,9 +254,17 @@ nmap <silent> <leader>n  :set nonu! <bar> set nornu!<CR>
 " Toggle paste with \p
 nmap <silent> <leader>p  :set nopaste!<CR>
 
+nmap <silent> <leader>f :Files<CR>
+nmap <silent> <leader>a :Ag<CR>
+
 " Faster buffer movement
 nmap <silent> <c-d>  :bnext<CR>
 nmap <silent> <c-a>  :bprevious<CR>
+
+" Faster error movement
+"nnoremap Q <nop>
+nnoremap <silent> <c-q> :lprevious<CR>
+nnoremap <silent> <c-e> :lnext<CR>
 
 " Refresh syntax with <F5>
 noremap <F5> <Esc>:syntax sync fromstart<CR>
@@ -260,7 +272,6 @@ noremap <F5> <Esc>:syntax sync fromstart<CR>
 "
 map <F7> :w<CR>:!ispell -x -d british %<CR><CR>:e<CR><CR>
 map <F10> :call CurtineIncSw()<CR>
-nnoremap Q <nop>
 "===============================================================================
 
 autocmd FileType python nnoremap K :<C-u>let save_isk = &iskeyword \|
@@ -268,6 +279,7 @@ autocmd FileType python nnoremap K :<C-u>let save_isk = &iskeyword \|
     \ execute "!pydoc " . expand("<cword>") \|
     \ let &iskeyword = save_isk<CR>
 
+autocmd Filetype json let g:indentLine_enabled = 0
 
-
-
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1

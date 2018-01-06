@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+
+import subprocess
+
+running_vms = subprocess.run(
+    ["VBoxManage", "list", "runningvms"], stdout=subprocess.PIPE)
+
+running_vms = running_vms.stdout.decode('utf8')
+lines = running_vms.split('\n')
+
+names = []
+
+for line in lines:
+    splat = line.split('"')
+    if len(splat) > 1:
+        names.append(splat[1])
+
+macaddr = {}
+
+for name in names:
+    vminfo = subprocess.run(
+        ["VBoxManage", "showvminfo", name],
+        stdout=subprocess.PIPE)
+    vminfo = vminfo.stdout.decode('utf8')
+    #print(vminfo)
+
+    for line in vminfo.split('\n'):
+        if 'MAC' not in line:
+            continue
+
+        f = line.find('MAC')
+        mac = line[f + 5:f + 17]
+
+        macaddr[mac] = name
+        break
+
+
+
+arptable = subprocess.run(["arp", "-a"], stdout=subprocess.PIPE)
+arptable = arptable.stdout.decode('utf8').split('\n')[:-1]
+
+for line in arptable:
+    x = line.split(' ')
+    ip = x[1][1:-1]
+    mac = x[3].replace(':', '').upper()
+
+    if mac in macaddr:
+        print("{} = {} = {}".format(macaddr[mac], mac, ip))
