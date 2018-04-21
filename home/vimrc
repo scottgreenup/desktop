@@ -157,9 +157,9 @@ set statusline+=[%f]
 
 
 " Syntastic statusline
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
 
 " Syntastic global configuration
 let g:statline_syntastic = 0

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-#git submodule update --init --recursive
+set +x
+
+git submodule update --init --recursive
 
 cwd=$(pwd)
 
