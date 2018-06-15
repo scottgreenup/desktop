@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+dir=$1
+
+if [[ -z "${dir}" ]]; then
+    echo "usage: $(basename ${0}) NAME"
+    exit 1
+fi
+
+root_dir="$(pwd)/${dir}-encrypted"
+mount_dir="$(pwd)/${dir}"
+
+if [[ ! -d "${root_dir}" ]]; then
+    echo "Could not read '${root_dir}' as a directory."
+    exit 1
+fi
+
+if ! which encfs 2>&1 1>/dev/null; then
+    echo "Could not find binary 'encfs' on path"
+    exit 1
+fi
+
+encfs "${root_dir}" "${mount_dir}"
