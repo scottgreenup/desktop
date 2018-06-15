@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+
+import getpass
+import subprocess
+import sys
+
+
+def get_default_groups(username):
+    with open('/etc/group', 'r') as f:
+        for line in f:
+            line = line.strip()
+            if username in line:
+                yield line.split(':')[0]
+
+
+def get_current_groups(username):
+    cp = subprocess.run(['id', '-Gn'], check=True, stdout=subprocess.PIPE)
+    return cp.stdout.decode('utf8').strip().split(' ')
+
+
+username = getpass.getuser()
+dg = set(get_default_groups(username))
+cg = set(get_current_groups(username))
+diff = cg - dg
+
+if len(diff) == 0:
+    sys.exit(1)
+
+print(' '.join(list(diff)))

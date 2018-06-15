@@ -66,8 +66,10 @@ alias gca='/usr/bin/git commit -a'
 alias gco='/usr/bin/git checkout'
 alias gm="/usr/bin/git merge --no-ff"
 alias gff="/usr/bin/git merge --ff-only"
-alias gl="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
-alias gla="/usr/bin/git log --date-order --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all"
+GIT_LOG_FORMAT='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+alias gl="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative"
+alias gla="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative --all"
+alias gls="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative --show-signature"
 alias gll="/usr/bin/git log --date-order --graph --oneline"
 alias gs="/usr/bin/git submodule"
 
@@ -76,11 +78,27 @@ function gc() {
         user_name=$(git config user.name)
         user_mail=$(git config user.email)
         user="${user_name} <${user_mail}>"
-        echo -e "Committing as -- ${user}\n\nDo this? (enter)"
+
+        signer=""
+        user_key=$(git config user.signingkey)
+        if [[ ! -z "${user_key}" ]]; then
+            if gpg --list-keys --with-colons ${user_key} &>/dev/null; then
+                uid=$(gpg --list-keys --with-colons ${user_key} | awk -F: '/^uid:/ { print $10 }')
+                pub=$(gpg --list-keys --with-colons ${user_key} | awk -F: '/^pub:/ { print $5 }')
+            fi
+        else
+            echo "No signingkey configured to commit with"
+            exit 1
+        fi
+
+        echo -e "You will commit as ${user}"
+        echo -e "You will sign the commit as ${uid}"
+        echo -e "You will with the commit with ${user_key} belonging to ${pub}"
+        echo -e "Do you want to continue? (ENTER)"
         read -n 1
     fi
 
-    /usr/bin/git commit "$@"
+    /usr/bin/git commit -S "$@"
 }
 
 function gca() {

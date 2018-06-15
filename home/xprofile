@@ -5,10 +5,11 @@ pulseaudio --start
 xsetroot -cursor_name left_ptr
 setxkbmap -option caps:escape
 
-[[ "$(which xscreensaver)" == "/usr/bin/xscreensaver" ]] && /usr/bin/xscreensaver -no-splash &
+#[[ "$(which xscreensaver)" == "/usr/bin/xscreensaver" ]] && /usr/bin/xscreensaver -no-splash &
 [[ "$(which nm-applet)" == "/usr/bin/nm-applet" ]] && /usr/bin/nm-applet &
 [[ -f ~/.screenlayout/main.sh ]] && ~/.screenlayout/main.sh
 
 #which compton && compton -b
 
+xautolock -time 5 -locker "i3lock -c 000000 -f" -notify 30 -notifier "notify-send -u critical 'Screen will lock in 30 seconds.'" &
 urxvtd -q -o -f &

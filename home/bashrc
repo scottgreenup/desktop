@@ -2,6 +2,7 @@
 
 # ~/.bashrc
 
+
 # Need to be PC
 alias person=man
 
@@ -12,9 +13,6 @@ export GOPATH="$HOME/go"
 # keyboard changes.
 setxkbmap -option caps:escape
 
-# This just ensures everything is there.
-xrdb ~/.Xresources
-
 source ~/.bash_aliases
 
 # If not running interactively, don't do anything
@@ -22,6 +20,33 @@ source ~/.bash_aliases
 
 bash_completion="/usr/share/bash-completion/bash_completion"
 [[ -f "${bash_completion}" ]] && . "${bash_completion}"
+
+
+function ensure_xresources() {
+    if [[ ! -z "${ENSURE_XRESOURCES}" ]]; then
+        return
+    fi
+    #export ENSURE_XRESOURCES="done"
+
+    fileA=$(mktemp)
+    fileB=$(mktemp)
+    # This just ensures everything is there.
+    xrdb -query > $fileA
+    xrdb ~/.Xresources
+    xrdb -query > $fileB
+
+    if ! diff -q $fileA $fileB 1>&2 2>/dev/null; then
+        if [[ "`pwd`" == "$HOME" ]]; then
+            urxvt &
+            while ! jobs | grep Running; do
+                echo "waiting"
+            done
+            kill $PPID
+        fi
+    fi
+}
+
+ensure_xresources
 
 function color() {
     echo "\[$(tput setaf "${1}")\]"
@@ -46,8 +71,12 @@ function success_prompt() {
     fi
 }
 
-function bash_prompt() {
+function bash_prompt_impl() {
     last_status=$(success_prompt)
+
+    history -a
+    history -c
+    history -r
 
     local login
     local time
@@ -60,9 +89,10 @@ function bash_prompt() {
     local virtualenv
 
     local sep="─"
-    local sep="~"
-    local lb="("
-    local rb=")"
+    #local sep="-"
+    #local sep="~"
+    local lb="["
+    local rb="]"
 
     if printenv VIRTUAL_ENV &>/dev/null; then
         virtualenv=$(printenv VIRTUAL_ENV | awk -F/ '{print $NF}')
@@ -72,8 +102,15 @@ function bash_prompt() {
     fi
 
     if git status &>/dev/null; then
+        local rev=`git rev-parse --abbrev-ref HEAD 2>/dev/null`
         local gitbranch
-        gitbranch=$(git branch | egrep "^\*" | awk '{print $NF}')
+        if [[ "${rev}" == "HEAD" ]]; then
+            # "* (HEAD detached at origin/master)"
+            gitbranch=$(git branch | egrep "^\*" | tail -c +4 | head -c -2)
+        else
+            # "* master"
+            gitbranch=$(git branch | egrep "^\*" | tail -c +3)
+        fi
 
         local count_untracked="0"
         local count_staged="0"
@@ -126,8 +163,20 @@ function bash_prompt() {
     echo -n "${lb}${last_status}${rb}"
     echo -n "${sep}"
     echo -n "${lb}${time}${rb}"
+
+    # TODO display login only if different from normal
     #echo -n "${sep}"
     #echo -n "${lb}${login}${rb}"
+
+    # Gets the groups you have activated with newgrp/sg -- Useful for docker
+    if which groups_diff 2>&1 1>/dev/null; then
+       if groups_diff 1>/dev/null; then
+           gd=$(groups_diff | head -c -1)
+           echo -n "${sep}"
+           echo -n "${lb}$(color 9)${gd}$(reset_color)${rb}"
+       fi
+    fi
+
     echo -n "${virtualenv}"
     echo -n "${sep}"
     echo -n "${lb}${directory}${rb}"
@@ -136,8 +185,14 @@ function bash_prompt() {
     echo "$ "
 }
 
+function bash_prompt() {
+
+    PS1=`bash_prompt_impl`
+}
+
+
 # Theme / PS1 / Colors
-PROMPT_COMMAND='PS1="$(bash_prompt)"'
+export PROMPT_COMMAND=bash_prompt
 
 # base16-shell (https://github.com/chriskempson/base16-shell)
 # Base16 Shell template by Chris Kempson (http://chriskempson.com)
@@ -244,7 +299,7 @@ export HISTIGNORE="&:[ ]*:exit:ls:clear:l:la:c:gla:g"
 export HISTTIMEFORMAT='%F %T '
 
 shopt -s histappend
-PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+#PROMPT_COMMAND="$PROMPT_COMMAND"
 
 source "/usr/bin/virtualenvwrapper.sh" 1>/dev/null
 source "/etc/profile.d/autojump.bash"

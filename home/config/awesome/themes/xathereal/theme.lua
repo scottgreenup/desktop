@@ -7,7 +7,7 @@ theme            = {}
 theme.icons      = theme_root .. "icons/"
 theme.wallpaper  = theme_root .. "background.png"
 theme.panel      = "png:" .. theme.icons .. "/panel/panel.png"
-theme.font       = "Roboto 7"
+theme.font       = "Roboto 8"
 
 -- | Colours/Colors | --
 
@@ -34,6 +34,11 @@ theme.border_marked = "#91231c"
 
 theme.menu_height = 15
 theme.menu_width  = 100
+
+
+theme.notification_width = 300
+theme.notification_fg = "#282A2E"
+theme.notification_bg = "#C5C8C6"
 
 -- | Layout | --
 
