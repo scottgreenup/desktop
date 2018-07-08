@@ -1,5 +1,11 @@
 # Desktop
 
+## Upcoming Changes
+
+ - Moving configuration management to Ansible
+
+## Overview
+
 These are my updated dotfiles, that I am using on a daily basis.
 
 This comes with a clean and "safe" deploy script. This will symbolically link
