@@ -74,8 +74,8 @@ end
 
 naughty.config.notify_callback = function(args)
 
-    if args.timeout == nil or args.timeout < 10 then
-        args.timeout = 10
+    if args.timeout == nil or args.timeout < 30 then
+        args.timeout = 30
     end
 
     if args.icon then
@@ -93,11 +93,12 @@ beautiful.init(theme_dir .. "xathereal/theme.lua")
 
 local home   = os.getenv("HOME")
 local exec   = function (s) awful.util.spawn(s, false) end
-local shexec = awful.util.spawn_with_shell
+
 local modkey = "Mod4"
 
 -- This is used later as the default terminal and editor to run.
 programs = {}
+programs["audio"]       = "pavucontrol"
 programs["browser"]     = "firefox"
 programs["terminal"]    = "urxvt"
 programs["lock"]        = "i3lock -c 000000 -f"
@@ -134,6 +135,7 @@ table.insert(screen_map, 1)
 for i = 2, screen.count() do
     gi = screen[i].geometry
     inserted = false
+
     for j = 1, #screen_map do
         gj = screen[screen_map[j]].geometry
 
@@ -358,11 +360,10 @@ for s = 1, screen.count() do
 
     -- Create the wibox
     mywibox[s] = awful.wibar({
-        position = "top", screen = s, height = 22 })
+        position = "top", screen = s, height = beautiful.menu_height })
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
-    --left_layout:add(mylauncher)
     left_layout:add(spr5px)
     left_layout:add(mytaglist[s])
     left_layout:add(spr5px)
@@ -398,7 +399,7 @@ for s = 1, screen.count() do
 
     right_layout:add(spr)
 
-    right_layout:add(widget_mem)
+    right_layout:add(widget_bat)
     right_layout:add(widget_display_l)
     right_layout:add(batwidget)
     right_layout:add(widget_display_r)
@@ -558,10 +559,19 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "t", function () reset_to_primary() end),
 
     -- Standard program
-    awful.key({ "Mod4",           }, "w", function ()       spawn_program(programs["browser"]) end),
-    awful.key({ modkey, "Shift"   }, "Return", function ()  spawn_program(programs["terminal"]) end),
+    awful.key({ modkey,           }, "w", function ()       spawn_program(programs["browser"]) end),
+
+    awful.key({ modkey, "Shift"   }, "Return", function ()
+        -- Make sure our X server resource database is up-to-date, that way our
+        -- terminal will have the latest settings configured in ~/.Xresources
+        spawn_program("xrdb ~/.Xresources")
+
+        spawn_program(programs["terminal"])
+    end),
+
     awful.key({ modkey, "Shift"   }, "l", function ()       spawn_program(programs["lock"]) end),
-    awful.key({ "Mod4",           }, "a", function ()       spawn_program(programs["randr"]) end),
+    awful.key({ modkey,           }, "a", function ()       spawn_program(programs["randr"]) end),
+    awful.key({ modkey,           }, "u", function ()       spawn_program(programs["audio"]) end),
 
     awful.key({ modkey, "Mod1"     }, "4", function ()
         awful.spawn.with_shell("sleep 0.2 && scrot --quality 100 --select -e 'echo $n' | xclip -in")
@@ -616,16 +626,18 @@ globalkeys = awful.util.table.join(
 )
 
 function move_client_to_screen(c, x, screen_map)
+    nextc = select_next(c)
     if x <= #screen_map then
         awful.client.movetoscreen(c, s)
     end
+    awful.screen.focus(nextc.screen)
 end
 
 function select_next(c)
     local scr = c.screen
 
     if #scr.get_clients() == 1 then
-        return
+        return client.focus
     end
 
     if c.floating then
@@ -633,7 +645,7 @@ function select_next(c)
         if client.focus then
             client.focus:raise()
         end
-        return
+        return client.focus
     end
 
     idx = awful.client.idx(c)
@@ -643,11 +655,13 @@ function select_next(c)
         if client.focus then
             client.focus:raise()
         end
-        return
+        return client.focus
     end
 
+    local t = c.screen.selected_tag
+
     -- if the index of the client is the last index of the column, go up
-    if idx["idx"] == idx["num"] then
+    if idx["col"] == t.column_count and idx["idx"] == idx["num"] then
         awful.client.focus.byidx(-1)
         if client.focus then
             client.focus:raise()
@@ -658,6 +672,8 @@ function select_next(c)
             client.focus:raise()
         end
     end
+
+    return client.focus
 end
 
 function kill_select(c)
@@ -675,14 +691,19 @@ client.connect_signal("unmanage", function(c)
     end
 end)
 
+screen.connect_signal("removed", function(s)
+    -- TODO move those tags to another screen
+    -- TODO keep tags sorted
+end)
+
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",       function (c) c.fullscreen = not c.fullscreen  end),
-    --awful.key({ modkey, "Shift"   }, "c",       function (c) c:kill()                         end),
     awful.key({ modkey, "Shift"   }, "c",       function (c) kill_select(c) end),
     awful.key({ modkey,           }, "t",       awful.client.floating.toggle ),
     awful.key({ modkey,           }, "Return",  function (c) c:swap(awful.client.getmaster()) end),
-    --awful.key({ modkey, "Control" }, "s",       function (c) c.sticky = not c.sticky end),
-    --awful.key({ modkey, "Control" }, "s",       function (c) c.ontop = not c.ontop end),
+
+    -- This is useful if for debugging, when you want to know what Awesome is
+    -- doing with a window.
     awful.key({ modkey, "Control" }, "s",       function (c)
         debug_print(
             string.format("window = %s\n", c.window) ..
@@ -793,6 +814,7 @@ for i = 1, 9 do
     end))
 end
 
+
 clientbuttons = awful.util.table.join(
     awful.button({ }, 1, function (c)
         client.focus = c;
@@ -801,9 +823,27 @@ clientbuttons = awful.util.table.join(
     awful.button({ modkey }, 1, awful.mouse.client.move),
     awful.button({ modkey }, 3, awful.mouse.client.resize))
 
--- Set keys
 root.keys(globalkeys)
--- }}}
+
+
+-- moveresize is relative to the current geometry, there was no alternative...
+function client_resize(c, w, h)
+    awful.client.moveresize(0, 0, w - c.width, h - c.height, c)
+end
+
+
+-- moveresize is relative to the current geometry, there was no alternative...
+function client_move(c, x, y)
+    awful.client.moveresize(x - c.x, y - c.y, 0, 0, c)
+end
+
+
+-- moveresize is relative to the current geometry, there was no alternative...
+function client_move_on_screen(c, x, y)
+    g = awful.screen.focused({client=true}).geometry
+    awful.client.moveresize(g.x + (x - c.x), g.y + (y - c.y), 0, 0, c)
+end
+
 
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
@@ -824,13 +864,27 @@ awful.rules.rules = {
     {
         rule_any = {
             class = {
-                "Arandr",
                 "gimp",
-                "keepassx2",
-                "Keepassx2"
+                "Keepassx2", "keepassx2",
             }
         },
         properties = { floating = true }
+    },
+
+    {
+        rule_any = {
+            class = {
+                "Arandr", "arandr",
+                "Pavucontrol", "pavucontrol"
+            }
+        },
+        properties = { floating = true },
+
+        -- TODO make this play nice with larger or smaller resolutions
+        callback = function(c)
+            client_move_on_screen(c, 100, 100)
+            client_resize(c, 1280, 720)
+        end
     },
 
     {

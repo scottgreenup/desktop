@@ -7,7 +7,7 @@ theme            = {}
 theme.icons      = theme_root .. "icons/"
 theme.wallpaper  = theme_root .. "background.png"
 theme.panel      = "png:" .. theme.icons .. "/panel/panel.png"
-theme.font       = "Roboto 8"
+theme.font       = "Roboto 7"
 
 -- | Colours/Colors | --
 
@@ -25,18 +25,18 @@ theme.clockgf    = "#d5d5c3"
 
 theme.useless_gap = 0
 theme.gap_single_client = false
-theme.border_width  = 1
+theme.border_width  = 2
 theme.border_normal = "#000000"
 theme.border_focus  = "#FF6666"
 theme.border_marked = "#91231c"
 
 -- | Menu | --
 
-theme.menu_height = 15
+theme.menu_height = 22
 theme.menu_width  = 100
 
 
-theme.notification_width = 300
+theme.notification_width = 400
 theme.notification_fg = "#282A2E"
 theme.notification_bg = "#C5C8C6"
 
@@ -59,7 +59,7 @@ theme.taglist_font        = "Roboto 8"
 
 -- | Tasklist | --
 
-theme.tasklist_font                 = "Roboto 8"
+theme.tasklist_font                 = "Roboto 7"
 theme.tasklist_disable_icon         = true
 --theme.tasklist_bg_normal            = "png:" .. theme.icons .. "panel/tasklist/normal.png"
 --theme.tasklist_bg_focus             = "png:" .. theme.icons .. "panel/tasklist/focus.png"
@@ -115,6 +115,7 @@ theme.widget_cpu    = theme.icons .. "/panel/widgets/widget_cpu.png"
 -- | MEM | --
 
 theme.widget_mem = theme.icons .. "/panel/widgets/widget_mem.png"
+theme.widget_bat = theme.icons .. "/panel/widgets/widget_bat.png"
 
 -- | FS | --
 

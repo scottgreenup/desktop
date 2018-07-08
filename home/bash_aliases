@@ -8,6 +8,7 @@ function ifconfig() {
     echo "use 'ip addr show' or 'ip a' for short"
 }
 
+
 # Specialized commands
 alias murder="shred -uvzn 20"
 alias fucking="sudo"
@@ -40,7 +41,7 @@ alias cls="clear && ls -l"
 alias clt="clear && tree"
 alias less="less -r"
 alias ls='ls --color=auto'
-alias l='ls -oh --group-directories-first'
+alias l='ls -ohL --group-directories-first'
 alias lt='ls -lhtc'
 alias la='ls -lha --group-directories-first'
 alias ll='ls -l --group-directories-first'
@@ -66,7 +67,9 @@ alias gca='/usr/bin/git commit -a'
 alias gco='/usr/bin/git checkout'
 alias gm="/usr/bin/git merge --no-ff"
 alias gff="/usr/bin/git merge --ff-only"
-GIT_LOG_FORMAT='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+
+# https://git-scm.com/docs/pretty-formats
+GIT_LOG_FORMAT='%Cred%h%Creset -%C(yellow)%-d%C(reset) %s %C(green)[%cr]%C(reset) %C(bold blue)%an <%ae>%C(reset) %C(cyan)%G?%C(reset)'
 alias gl="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative"
 alias gla="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative --all"
 alias gls="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative --show-signature"
@@ -136,6 +139,33 @@ function dsh () {
 # Docker Compose
 alias dk="/usr/bin/sudo /usr/bin/docker-compose"
 alias dkps="/usr/bin/sudo /usr/bin/docker-compose ps"
+
+# Kubernetes
+function kubectl() {
+    echo "use 'k' instead"
+}
+
+alias k="/usr/bin/kubectl"
+alias kg="/usr/bin/kubectl get"
+alias kd="/usr/bin/kubectl get"
+alias kcg="/usr/bin/kubectl config get-contexts"
+alias kcu="/usr/bin/kubectl config use-context"
+alias kcc="/usr/bin/kubectl config current-context"
+alias kaf="/usr/bin/kubectl apply -f"
+
+function kcurrctx() {
+    target="$HOME/.kube/config"
+    if [[ ! -r "$target" ]]; then
+        echo "Could not read $target - Do you have a kubectl configured?"
+        return 1
+    fi
+
+    if which yq 2>&1 1>/dev/null; then
+        yq -r '.["current-context"]' < "$target"
+    else
+        awk -F': ' '/^current-context: /{print $2}' < "$target"
+    fi
+}
 
 # Applications
 alias feh="feh --auto-zoom --borderless --draw-filename --geometry 800x600"

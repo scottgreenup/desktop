@@ -21,33 +21,6 @@ source ~/.bash_aliases
 bash_completion="/usr/share/bash-completion/bash_completion"
 [[ -f "${bash_completion}" ]] && . "${bash_completion}"
 
-
-function ensure_xresources() {
-    if [[ ! -z "${ENSURE_XRESOURCES}" ]]; then
-        return
-    fi
-    #export ENSURE_XRESOURCES="done"
-
-    fileA=$(mktemp)
-    fileB=$(mktemp)
-    # This just ensures everything is there.
-    xrdb -query > $fileA
-    xrdb ~/.Xresources
-    xrdb -query > $fileB
-
-    if ! diff -q $fileA $fileB 1>&2 2>/dev/null; then
-        if [[ "`pwd`" == "$HOME" ]]; then
-            urxvt &
-            while ! jobs | grep Running; do
-                echo "waiting"
-            done
-            kill $PPID
-        fi
-    fi
-}
-
-ensure_xresources
-
 function color() {
     echo "\[$(tput setaf "${1}")\]"
 
@@ -112,24 +85,10 @@ function bash_prompt_impl() {
             gitbranch=$(git branch | egrep "^\*" | tail -c +3)
         fi
 
-        local count_untracked="0"
-        local count_staged="0"
-        local count_modified="0"
+        local count_modified=$(git status -s | grep -E "^ [^\s]" | wc -l)
+        local count_staged=$(git status -s | grep -E "^[^\s] " | wc -l)
+        local count_untracked=$(git status -s | grep -E "^\?\?" | wc -l)
 
-        while IFS= read -r line; do
-            x=$(echo "${line}" | head -c 1)
-            y=$(echo "${line}" | head -c 2 | tail -c 1)
-
-            #echo "x=$x y=$y"
-
-            if [[ "$x" = "?" ]] && [[ "$y" = "?" ]]; then
-                count_untracked=$((count_untracked + 1))
-            elif [[ "$x" != " " ]] && [[ "$y" == " " ]]; then
-                count_staged=$((count_staged + 1))
-            elif [[ "$x" == " " ]] && [[ "$y" != " " ]]; then
-                count_modified=$((count_modified + 1))
-            fi
-        done < <(git status -s)
 
         if [[ ${count_untracked} != 0 ]]; then
             count_untracked=" $(color 3)...${count_untracked}$(reset_color)"

@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+
+from subprocess import run
+from os import path
+
+
+def get_swear_word_list():
+    directory = path.split(path.realpath(__file__))[0]
+    location = path.join(directory, 'cuss.txt')
+    with open(location, 'r') as f:
+        content = f.read().strip().split('\n')
+        return content
+
+
+def main():
+    terms = get_swear_word_list()
+    terms = ['\\b{}\\b'.format(t) for t in terms]
+    arg = '{}'.format('|'.join(terms))
+    run(["ag", "-i", arg], check=True)
+
+
+if __name__ == '__main__':
+    main()

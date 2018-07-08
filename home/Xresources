@@ -49,7 +49,7 @@
 !===============================================================================
 Xft.antialias:              true
 Xft.autohint:               false
-Xft.dpi:	110
+Xft.dpi:	                109
 Xft.hinting:                true
 Xft.hintstyle:              hintslight
 Xft.rgba:                   rgb
@@ -58,20 +58,20 @@ Xft.rgba:                   rgb
 !===============================================================================
 ! URXVT settings
 !===============================================================================
-urxvt.background:	        [100]#1d1f21
-urxvt.blurRadius:           10
+urxvt.background:	        [100]#1D1F21
+urxvt.blurRadius:           0
 urxvt.borderless:           true
 urxvt.buffered:             true
 urxvt.cursorBlink:          true
 urxvt.depth:                32
 urxvt.externalBorder:       0
-urxvt.internalBorder:       3
+urxvt.internalBorder:       1
 urxvt.fading:               false
-urxvt.fadeColor:	        #1d1f21
+urxvt.fadeColor:	        #1D1F21
 urxvt.iso14755:             false
 urxvt.iso14755_52:          false
 urxvt.jumpScroll:           false
-urxvt.modifier:             super
+!urxvt.modifier:             super
 urxvt.pointerBlank:         true
 urxvt.saveLines:            65535
 urxvt.scrollBar:            false
@@ -86,19 +86,7 @@ urxvt.urgentOnBell:         false
 urxvt.visualBell:           false
 !===============================================================================
 
-
-!===============================================================================
-! XScreenSaver
-!===============================================================================
-xscreensaver.fade: True
-xscreensaver.fadeSeconds: 0:00:01
-xscreensaver.Dialog.borderwidth: 0
-xscreensaver.Dialog.internalBorderWidth: 0
-xscreensaver.Dialog.shadowThickness: 0
-xscreensaver.passwd.thermometer.width: 0
-!===============================================================================
-
-Xcursor.size: 16
+Xcursor.size: 20
 
 urxvt.perl-ext-common:	font-size,clipboard,default,matcher
 urxvt.keysym.M-equal:	font-size:reset
@@ -106,16 +94,10 @@ urxvt.keysym.M-minus:	font-size:decsave
 urxvt.keysym.M-plus:	font-size:incsave
 
 urxvt.url-launcher:   /usr/bin/firefox
-!==== 3 = right-click it, no modifier
-urxvt.matcher.button: 3
 urxvt.matcher.rend.0: Uline Bold fg5
 
-xft*dpi:	110
-xft*antialias:	true
-xft*autohint:	false
-xft*hinting:	true
-xft*hintstyle:	hintslight
-xft*rgba:	    rgb
+! mouse-right-click = 3
+urxvt.matcher.button: 3
 
 urxvt.letterSpace:          -1
 urxvt.lineSpace:            -1
@@ -131,4 +113,5 @@ urxvt.lineSpace:            -1
 !URxvt.font:	xft:M+ 1mn:style=normal:dpi=109:size=9
 !URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=109:size=11
 !URxvt.font:	xft:Anonymous Pro Minus:style=Regular:dpi=109:size=12
-URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=109:size=13
+!URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=163:size=11
+URxvt.font:	xft:Roboto Mono:style=light:dpi=109::size=12
