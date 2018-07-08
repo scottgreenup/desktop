@@ -1,0 +1,80 @@
+---
+- name: install packages
+  become: true
+  pacman: name="{{item}}" update_cache=yes state=present
+  with_items:
+    - arandr
+    - boostnote
+    - aspell
+    - aspell-en
+    - autojump
+    - awesome
+    - bash
+    - bind-tools
+    - encfs
+    - firefox
+    - git
+    - gnupg
+    - htop
+    - i3lock
+    - jq
+    - keepassxc
+    - net-tools
+    - network-manager-applet
+    - networkmanager
+    - networkmanager-openconnect
+    - nitrogen
+    - nmap
+    - openssh
+    - pavucontrol
+    - peek
+    - python
+    - python2
+    - rxvt-unicode
+    - redshift
+    - ripgrep
+    - rsync
+    - scrot
+    - sed
+    - the_silver_searcher
+    - tmux
+    - tree
+    - ttf-anonymous-pro
+    - ttf-baekmuk
+    - ttf-dejavu
+    - ttf-fantasque-sans-mono
+    - ttf-fira-mono
+    - ttf-fira-sans
+    - ttf-freefont
+    - ttf-hanazono
+    - ttf-inconsolata
+    - ttf-liberation
+    - ttf-roboto
+    - ttf-roboto-mono
+    - ttf-sazanami
+    - ttf-ubuntu-font-family
+    - virtualbox
+    - virtualbox-host-modules-arch
+    - unzip
+    - vim
+    - xorg
+    - xorg-apps
+
+
+# Bluetooth for particular shiznit
+# - blueman
+# - bluez
+# - bluez-libs
+# - bluez-utils
+
+# Items on the AUR
+# - discord
+#   - libc++
+# - dmenu2
+# - dropbox
+# - fantasque-sans-mono
+# - kubectl-bin
+# - kubectx
+# - peek
+# - ttf-roboto-mono
+# - yq
