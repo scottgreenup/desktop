@@ -446,6 +446,15 @@ for s = 1, screen.count() do
     mywibox[s]:set_widget(layout)
 end
 -- }}}
+--
+function move_client_to_screen(c, x, screen_map)
+    nextc = select_next(c)
+    if x <= #screen_map then
+        awful.client.movetoscreen(c, screen_map[x])
+    end
+    awful.screen.focus(nextc.screen)
+end
+
 
 function focus_on_screen(x, screen_map)
     if x <= #screen_map then
@@ -624,14 +633,6 @@ globalkeys = awful.util.table.join(
         awful.util.spawn(command)
     end)
 )
-
-function move_client_to_screen(c, x, screen_map)
-    nextc = select_next(c)
-    if x <= #screen_map then
-        awful.client.movetoscreen(c, s)
-    end
-    awful.screen.focus(nextc.screen)
-end
 
 function select_next(c)
     local scr = c.screen
