@@ -503,59 +503,24 @@ function reset_to_primary()
     awful.tag.viewmore({shared_tag_list[1]})
 end
 
---local scratchpad_scr = screen.fake_add(0, 0, 1920, 1080)
---local spotify_tag = awful.tag.add(
---    "spotify", {
---        screen = scratchpad_scr.index,
---        layout = awful.layout.suit.floating
---    }
---)
---
-----awful.spawn("arandr", {tag=spotify_tag})
---
---debug_print(string.format("%d\n", spotify_tag.index))
---spotify_tag.selected = false
 
--- onkey we need to move_tag_to_screen that is focused, then select that client
--- offkey we need to move_tag_to_scratchpad, then select another client
-
--- {{{ Key bindings
+--+=============================================================================
+--| Key Bindings
+--+-----------------------------------------------------------------------------
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "j",
         function ()
             awful.client.focus.byidx( 1)
-            --local c = client.focus
-            --awful.client.focus.bydirection("down")
-
-            --debug_print("down")
-            --
-            --if c == client.focus then
-            --    awful.client.focus.bydirection("right")
-            --    debug_print("right")
-            --
-            --    if c == client.focus then
-            --        awful.client.focus.byidx( 1)
-            --        debug_print("+1")
-            --        return
-            --    end
-            --
-            --    c = client.focus
-            --    awful.client.focus.bydirection("up")
-            --    debug_print("up")
-            --    while c ~= client.focus do
-            --        awful.client.focus.bydirection("up")
-            --        debug_print("up")
-            --    end
-            --end
-
-            --debug_print("raise")
-            if client.focus then client.focus:raise() end
+            if client.focus then
+                client.focus:raise()
+            end
         end),
     awful.key({ modkey,           }, "k",
         function ()
             awful.client.focus.byidx(-1)
-            --awful.client.focus.bydirection("up")
-            if client.focus then client.focus:raise() end
+            if client.focus then
+                client.focus:raise()
+            end
         end),
 
     -- Layout manipulation
@@ -706,6 +671,14 @@ clientkeys = awful.util.table.join(
     -- This is useful if for debugging, when you want to know what Awesome is
     -- doing with a window.
     awful.key({ modkey, "Control" }, "s",       function (c)
+
+        -- WTF IS THIS STUPID MAXAMIZED BULLSHIT
+
+        c.maximized = false
+        c.minimized = false
+        c.maximized_horizontal = false
+        c.maximized_vertical = false
+
         debug_print(
             string.format("window = %s\n", c.window) ..
             string.format("name = %s\n", c.name) ..
@@ -725,9 +698,9 @@ clientkeys = awful.util.table.join(
             string.format("above = %s\n", tostring(c.above)) ..
             string.format("below = %s\n", tostring(c.below)) ..
             string.format("fullscreen = %s\n", tostring(c.fullscreen)) ..
-            string.format("maxamized = %s\n", tostring(c.maxamized)) ..
-            string.format("maxamized_horizontal = %s\n", tostring(c.maxamized_horizontal)) ..
-            string.format("maxamized_vertical = %s\n", tostring(c.maxamized_veritcal)) ..
+            string.format("maximized = %s\n", c.maximized) ..
+            string.format("maximized_horizontal = %s\n", c.maximized_horizontal) ..
+            string.format("maximized_vertical = %s\n", c.maximized_vertical) ..
             string.format("sticky = %s\n", tostring(c.sticky)) ..
             string.format("modal = %s\n", tostring(c.modal)) ..
             string.format("focusable = %s\n", tostring(c.focusable)) ..
@@ -743,6 +716,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "n",
         function (c)
             c.minimized = true
+            c.maximized = false
         end),
     awful.key({ modkey,           }, "m",
         function (c)
@@ -776,6 +750,8 @@ for i = 1, 9 do
                 other_scr = new_tag.screen
                 other_tag = other_scr.selected_tag
 
+                -- TODO can other_tag be nil?
+
                 move_tag_to_screen(new_tag, target_scr.index)
                 awful.tag.viewnone(target_scr)
                 awful.tag.viewnone(other_scr)
@@ -799,6 +775,26 @@ for i = 1, 9 do
 
                 awful.tag.viewmore({new_tag})
                 force_focus(target_scr)
+            end
+
+            -- Sort the tag lists
+            -- Very naive solution, that requires minimal understanding of LUA
+            -- to code... lol
+            message = ""
+
+            -- For sorting, we need a counter array. The index of a tag
+            -- determines where it is in the tag list. But the index can't be
+            -- any number, it has to be between 1..len(tags on screen); so we
+            -- are going to go through each tag and keep track of the index per
+            -- screen
+            counters = {}
+            for s in screen do
+                counters[s.index] = 0
+            end
+            for i = 1, 9 do
+                local _tag = shared_tag_list[i]
+                counters[_tag.screen.index] = counters[_tag.screen.index] + 1
+                _tag.index = counters[_tag.screen.index]
             end
 
         end),
