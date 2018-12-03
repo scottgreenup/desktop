@@ -1,0 +1,8 @@
+---
+- name: install virtual machine host modules
+  become: true
+  pacman: name="{{item.packages}}" update_cache=yes state=present
+  loop:
+    - packages:
+      - virtualbox
+      - virtualbox-host-modules-arch

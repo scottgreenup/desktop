@@ -91,25 +91,7 @@
       - rxvt-unicode
       - scrot
       - xorg
-      - xorg-apps
-
-- name: install virtual machine host modules
-  become: true
-  pacman: name="{{item.packages}}" update_cache=yes state=present
-  loop:
-    - packages:
-      - virtualbox
-      - virtualbox-host-modules-arch
-
-- name: install virtual machine guest modules
-  become: true
-  pacman: name="{{item.packages}}" update_cache=yes state=present
-  loop:
-    - packages:
-      - virtualbox-guest-utils
-      - virtualbox-guest-modules-arch
-
-
+      - xorg-apps 
 
 # Bluetooth for particular shiznit
 # - blueman
