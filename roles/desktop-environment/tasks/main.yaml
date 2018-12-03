@@ -19,14 +19,21 @@
     - vim
 
 # VIM
-- name: Create VIM autoload
+- name: Create .vim
+  file:
+    path: "~/.vim"
+    state: directory
+  tags:
+    - vim
+
+- name: Create .vim/autoload
   file:
     path: "~/.vim/autoload"
     state: directory
   tags:
     - vim
 
-- name: Create VIM bundle
+- name: Create .vim/bundle
   file:
     path: "~/.vim/bundle"
     state: directory
@@ -101,3 +108,40 @@
       dest: "~/.vim/bundle/vim-fzf"
     - src: "./src/github.com/airblade/vim-gitgutter"
       dest: "~/.vim/bundle/vim-gitgutter"
+
+
+- name: Link .vim/after
+  file:
+    src: "{{playbook_dir}}/home/vim/after"
+    dest: "~/.vim/after"
+    state: link
+  tags:
+    - vim
+    - debug
+
+- name: Link .vim/colors/base16
+  file:
+    src: "{{playbook_dir}}/src/github.com/chriskempson/base16-vim/colors/base16-tomorrow.vim"
+    dest: "~/.vim/colors/base16-tomorrow.vim"
+    state: link
+  tags:
+    - vim
+    - debug
+
+- name: Link .vim/colors
+  file:
+    src: "{{playbook_dir}}/home/vim/colors"
+    dest: "~/.vim/colors"
+    state: link
+  tags:
+    - vim
+    - debug
+
+- name: Link .vimrc
+  file:
+    src: "{{playbook_dir}}/home/vimrc"
+    dest: "~/.vimrc"
+    state: link
+  tags:
+    - vim
+    - debug
