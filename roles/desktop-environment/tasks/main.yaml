@@ -15,3 +15,89 @@
     src: "{{playbook_dir}}/src/github.com/chriskempson/base16-shell"
     dest: "~/.config/base16-shell"
     state: link
+  tags:
+    - vim
+
+# VIM
+- name: Create VIM autoload
+  file:
+    path: "~/.vim/autoload"
+    state: directory
+  tags:
+    - vim
+
+- name: Create VIM bundle
+  file:
+    path: "~/.vim/bundle"
+    state: directory
+  tags:
+    - vim
+
+- name: Clone VIM repositories
+  git:
+    dest: "{{ item.dest }}"
+    repo: "{{ item.repo }}"
+    version: master
+  tags:
+    - vim
+  loop:
+    - repo: "https://github.com/tpope/vim-pathogen.git"
+      dest: "./src/github.com/tpope/vim-pathogen"
+    - repo: "https://github.com/chriskempson/base16-vim.git"
+      dest: "./src/github.com/chriskempson/base16-vim"
+    - repo: "https://github.com/scrooloose/nerdtree.git"
+      dest: "./src/github.com/scrooloose/nerdtree"
+    - repo: "https://github.com/ntpeters/vim-better-whitespace.git"
+      dest: "./src/github.com/ntpeters/vim-better-whitespace"
+    - repo: "https://github.com/pangloss/vim-javascript.git"
+      dest: "./src/github.com/pangloss/vim-javascript"
+    - repo: "https://github.com/tpope/vim-fugitive"
+      dest: "./src/github.com/tpope/vim-fugitive"
+    - repo: "https://github.com/tomlion/vim-solidity"
+      dest: "./src/github.com/tomlion/vim-solidity"
+    - repo: "https://github.com/nvie/vim-flake8"
+      dest: "./src/github.com/nvie/vim-flake8"
+    - repo: "https://github.com/ekalinin/Dockerfile.vim"
+      dest: "./src/github.com/ekalinin/Dockerfile.vim"
+    - repo: "https://github.com/junegunn/fzf"
+      dest: "./src/github.com/junegunn/fzf"
+    - repo: "https://github.com/airblade/vim-gitgutter"
+      dest: "./src/github.com/airblade/vim-gitgutter"
+
+- name: Link VIM Pathogen
+  file:
+    src: "{{playbook_dir}}/src/github.com/tpope/vim-pathogen/autoload/pathogen.vim"
+    dest: "~/.vim/autoload/pathogen.vim"
+    state: link
+  tags:
+    - vim 
+
+- name: Link VIM packages
+  file:
+    src: "{{playbook_dir}}/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+  tags:
+    - vim
+    - debug
+  loop:
+    - src: "./src/github.com/chriskempson/base16-vim"
+      dest: "~/.vim/bundle/base16-vim"
+    - src: "./src/github.com/scrooloose/nerdtree"
+      dest: "~/.vim/bundle/nerdtree"
+    - src: "./src/github.com/ntpeters/vim-better-whitespace"
+      dest: "~/.vim/bundle/vim-better-whitespace"
+    - src: "./src/github.com/pangloss/vim-javascript"
+      dest: "~/.vim/bundle/vim-javascript"
+    - src: "./src/github.com/tpope/vim-fugitive"
+      dest: "~/.vim/bundle/vim-fugitive"
+    - src: "./src/github.com/tomlion/vim-solidity"
+      dest: "~/.vim/bundle/vim-solidity"
+    - src: "./src/github.com/nvie/vim-flake8"
+      dest: "~/.vim/bundle/vim-flake8"
+    - src: "./src/github.com/ekalinin/Dockerfile.vim"
+      dest: "~/.vim/bundle/Dockerfile"
+    - src: "./src/github.com/junegunn/fzf"
+      dest: "~/.vim/bundle/vim-fzf"
+    - src: "./src/github.com/airblade/vim-gitgutter"
+      dest: "~/.vim/bundle/vim-gitgutter"
