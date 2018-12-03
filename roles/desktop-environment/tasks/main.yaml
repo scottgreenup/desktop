@@ -86,7 +86,6 @@
     state: link
   tags:
     - vim
-    - debug
   loop:
     - src: "./src/github.com/chriskempson/base16-vim"
       dest: "~/.vim/bundle/base16-vim"
@@ -117,7 +116,6 @@
     state: link
   tags:
     - vim
-    - debug
 
 - name: Link .vim/colors/base16
   file:
@@ -126,7 +124,6 @@
     state: link
   tags:
     - vim
-    - debug
 
 - name: Link .vim/colors
   file:
@@ -135,7 +132,6 @@
     state: link
   tags:
     - vim
-    - debug
 
 - name: Link .vimrc
   file:
@@ -144,4 +140,3 @@
     state: link
   tags:
     - vim
-    - debug
