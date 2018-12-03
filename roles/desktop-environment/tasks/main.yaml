@@ -1,0 +1,17 @@
+---
+- name: Clone github.com/chriskempson/base16-shell
+  git:
+    dest: ./src/github.com/chriskempson/base16-shell
+    repo: "https://github.com/chriskempson/base16-shell.git"
+    version: master
+
+- name: Create .config
+  file:
+    path: "~/.config"
+    state: directory
+
+- name: Link github.com/chriskempson/base16-shell
+  file:
+    src: "{{playbook_dir}}/src/github.com/chriskempson/base16-shell"
+    dest: "~/.config/base16-shell"
+    state: link

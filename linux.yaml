@@ -3,4 +3,6 @@
   connection: local
 
   roles:
-    - common
+          #- common
+      #- vm-guest
+    - desktop-environment
