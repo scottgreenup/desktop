@@ -77,7 +77,7 @@
     dest: "~/.vim/autoload/pathogen.vim"
     state: link
   tags:
-    - vim 
+    - vim
 
 - name: Link VIM packages
   file:
@@ -140,3 +140,134 @@
     state: link
   tags:
     - vim
+
+- name: Create .config/awesome
+  file:
+    path: "~/.config/awesome"
+    state: directory
+  tags:
+    - awesome
+
+- name: Link .config/awesome/rc.lua
+  file:
+    src: "{{playbook_dir}}/home/config/awesome/rc.lua"
+    dest: "~/.config/awesome/rc.lua"
+    state: link
+  tags:
+    - awesome
+
+- name: Link .config/awesome/themes
+  file:
+    src: "{{playbook_dir}}/home/config/awesome/themes"
+    dest: "~/.config/awesome/themes"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/NuckChorris/assault
+  git:
+    dest: "./src/github.com/NuckChorris/assault"
+    repo: "https://github.com/NuckChorris/assault.git"
+    version: master
+
+- name: Link .config/awesome/assault.lua
+  file:
+    src: "{{playbook_dir}}/src/github.com/NuckChorris/assault/awesomewm/assault.lua"
+    dest: "~/.config/awesome/assault.lua"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/NuckChorris/assault
+  git:
+    dest: "./src/github.com/scottgreenup/lain"
+    repo: "https://github.com/scottgreenup/lain.git"
+    version: master
+
+- name: Link .config/awesome/lain
+  file:
+    src: "{{playbook_dir}}/src/github.com/scottgreenup/lain"
+    dest: "~/.config/awesome/lain"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/NuckChorris/assault
+  git:
+    dest: "./src/github.com/majutsushi/urxvt-font-size"
+    repo: "https://github.com/majutsushi/urxvt-font-size.git"
+    version: master
+
+- name: Link .config/awesome/lain
+  file:
+    src: "{{playbook_dir}}/src/github.com/majutsushi/urxvt-font-size/font-size"
+    dest: "~/.urxvt/ext/font-size"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/vicious-widgets/vicious
+  git:
+    dest: "./src/github.com/vicious-widgets/vicious"
+    repo: "https://github.com/vicious-widgets/vicious.git"
+    version: master
+
+- name: Copy vicious
+  copy:
+    src: "{{playbook_dir}}/src/github.com/vicious-widgets/vicious/"
+    dest: "~/.config/awesome/vicious"
+  tags:
+    - awesome
+
+- name: Link bin/
+  file:
+    src: "{{playbook_dir}}/bin"
+    dest: "~/bin"
+    state: link
+
+- name: Link bin/
+  file:
+    src: "{{playbook_dir}}/bin"
+    dest: "~/bin"
+    state: link
+
+- name: Create .urxvt/ext
+  file:
+    path: "~/.urxvt/ext"
+    state: directory
+  tags:
+    - awesome
+
+- name: Link dotfiles
+  file:
+    src: "{{playbook_dir}}/{{item.src}}"
+    dest: "~/{{item.dest}}"
+    state: link
+    force: yes
+  loop:
+    - src: home/xmodmaprc
+      dest: .Xmodmap
+    - src: home/xprofile
+      dest: .xprofile
+    - src: home/bashrc
+      dest: .bashrc
+    - src: home/bash_aliases
+      dest: .bash_aliases
+    - src: home/Xresources
+      dest: .Xresources
+    - src: home/inputrc
+      dest: .inputrc
+    - src: home/xinitrc
+      dest: .xinitrc
+
+- name: Create /etc/lightdm
+  file:
+    path: "/etc/lightdm"
+    state: directory
+  become: true
+
+- name: Copy /etc/lightdm/lightdm.conf
+  copy:
+    src: "{{playbook_dir}}/etc/lightdm/lightdm.conf"
+    dest: "/etc/lightdm/lightdm.conf"
+  become: true

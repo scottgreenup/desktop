@@ -1,0 +1,4 @@
+xrandr --auto
+xrdb ~/.Xresources
+
+awesome

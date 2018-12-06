@@ -99,7 +99,7 @@ urxvt.matcher.rend.0: Uline Bold fg5
 ! mouse-right-click = 3
 urxvt.matcher.button: 3
 
-urxvt.letterSpace:          -1
+urxvt.letterSpace:          0
 urxvt.lineSpace:            -1
 
 ! 3840x2160 @ 15.6 = 282
@@ -112,6 +112,6 @@ urxvt.lineSpace:            -1
 !URxvt.font:	xft:Roboto Mono:style=light:dpi=109:size=8
 !URxvt.font:	xft:M+ 1mn:style=normal:dpi=109:size=9
 !URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=109:size=11
-!URxvt.font:	xft:Anonymous Pro Minus:style=Regular:dpi=109:size=12
 !URxvt.font:	xft:Fantasque Sans Mono:style=light:dpi=163:size=11
-URxvt.font:	xft:Roboto Mono:style=light:dpi=109::size=12
+!URxvt.font:	xft:Roboto Mono:style=light:dpi=109::size=10
+URxvt.font:	xft:Anonymous Pro Minus:style=Regular:dpi=109:size=12

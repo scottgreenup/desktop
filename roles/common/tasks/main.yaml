@@ -2,7 +2,7 @@
 - name: install common fonts
   become: true
   pacman: name="{{item.packages}}" update_cache=yes state=present
-  loop: 
+  loop:
     - packages:
       - ttf-anonymous-pro
       - ttf-baekmuk
@@ -83,6 +83,8 @@
       - flameshot
       - i3lock
       - keepassxc
+      - lightdm
+      - lightdm-gtk-greeter
       - network-manager-applet
       - nitrogen
       - pavucontrol
@@ -90,8 +92,12 @@
       - redshift
       - rxvt-unicode
       - scrot
+      - xf86-video-fbdev
+      - xf86-video-vesa
       - xorg
-      - xorg-apps 
+      - xorg-apps
+      - xorg-drivers
+      - xorg-xinit
 
 # Bluetooth for particular shiznit
 # - blueman

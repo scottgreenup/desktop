@@ -244,6 +244,18 @@ base16
 # Environment variables
 export PATH="$PATH:$HOME/arc/arcanist/bin/"
 export PATH="$PATH:$HOME/go/bin"
+
+found=0
+for path in $(echo $PATH | tr ":" " "); do
+    if [[ ${path} == "$HOME/bin" ]]; then
+        found=1
+    fi
+done
+
+if [[ $found -eq 0 ]]; then
+    export PATH="$PATH:$HOME/bin"
+fi
+
 export TERM='rxvt-256color'
 export EDITOR='vim'
 
