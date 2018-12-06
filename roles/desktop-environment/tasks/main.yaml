@@ -271,3 +271,15 @@
     src: "{{playbook_dir}}/etc/lightdm/lightdm.conf"
     dest: "/etc/lightdm/lightdm.conf"
   become: true
+
+- name: Enable LightDM
+  become: true
+  service:
+    name: lightdm
+    enabled: yes
+
+- name: Enable NetworkManager
+  become: true
+  service:
+    name: NetworkManager
+    enabled: yes
