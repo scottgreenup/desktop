@@ -274,12 +274,12 @@
 
 - name: Enable LightDM
   become: true
-  service:
+  systemd:
     name: lightdm
     enabled: yes
 
 - name: Enable NetworkManager
   become: true
-  service:
+  systemd:
     name: NetworkManager
     enabled: yes

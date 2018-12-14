@@ -2,7 +2,6 @@
 
 # ~/.bashrc
 
-
 # Need to be PC
 alias person=man
 
@@ -144,13 +143,10 @@ function bash_prompt_impl() {
     echo "$ "
 }
 
+# Theme / PS1 / Colors
 function bash_prompt() {
-
     PS1=`bash_prompt_impl`
 }
-
-
-# Theme / PS1 / Colors
 export PROMPT_COMMAND=bash_prompt
 
 # base16-shell (https://github.com/chriskempson/base16-shell)
@@ -242,7 +238,6 @@ function base16 () {
 base16
 
 # Environment variables
-export PATH="$PATH:$HOME/arc/arcanist/bin/"
 export PATH="$PATH:$HOME/go/bin"
 
 found=0
@@ -280,7 +275,10 @@ SSH_ENV="$HOME/.ssh/agent-environment"
 function start_agent {
     /usr/bin/ssh-agent > "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add $HOME/.ssh/atlassian
+
+    for keyfile in $(ls $HOME/.ssh | grep -v -E "(agent-environment|known_hosts|config|*.pub)"); do
+        /usr/bin/ssh-add "$HOME/.ssh/${keyfile}"
+    done
 }
 
 if [[ -f "${SSH_ENV}" ]]; then
