@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# ~/.bashrc
-
-# Need to be PC
-alias person=man
-
-export GOPATH="$HOME/go"
-
 # This is a dirty hack to make it easier to reset the keyboard. Udev rules did
 # not solve this problem. Something about the right session not getting the new
 # keyboard changes.
@@ -238,6 +231,7 @@ function base16 () {
 base16
 
 # Environment variables
+export GOPATH="$HOME/go"
 export PATH="$PATH:$HOME/go/bin"
 
 found=0
@@ -254,8 +248,13 @@ fi
 export TERM='rxvt-256color'
 export EDITOR='vim'
 
-export HISTFILESIZE=500000
+# Command history
+
+shopt -s cmdhist
+shopt -s lithist
+
 export HISTCONTROL=ignoreboth
+export HISTFILESIZE=500000
 export HISTSIZE=500000
 
 # &    => ignore duplicate commands

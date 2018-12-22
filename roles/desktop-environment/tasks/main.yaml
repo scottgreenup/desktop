@@ -67,12 +67,6 @@
     - repo: "https://github.com/airblade/vim-gitgutter"
       dest: "./src/github.com/airblade/vim-gitgutter"
 
-- name: Clone VIM repositories join
-  async_status: jid={{ clone_vim.ansible_job_id }}
-  register: job_result
-  until: job_result.finished
-  retries: 300
-
 - name: Link VIM Pathogen
   file:
     src: "{{playbook_dir}}/src/github.com/tpope/vim-pathogen/autoload/pathogen.vim"

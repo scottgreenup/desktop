@@ -26,6 +26,7 @@
       - aspell-en
       - autojump
       - bash
+      - bash-completion
       - bat
       - bind-tools
       - encfs
