@@ -19,24 +19,17 @@
     - vim
 
 # VIM
-- name: Create .vim
-  file:
-    path: "~/.vim"
-    state: directory
-  tags:
-    - vim
 
-- name: Create .vim/autoload
+- name: Create VIM directories
   file:
-    path: "~/.vim/autoload"
+    path: "~/{{item}}"
     state: directory
-  tags:
-    - vim
-
-- name: Create .vim/bundle
-  file:
-    path: "~/.vim/bundle"
-    state: directory
+  loop:
+    - ".vim"
+    - ".vim/autoload"
+    - ".vim/bundle"
+    - ".vim/colors"
+    - ".vim/ftplugin"
   tags:
     - vim
 
@@ -45,6 +38,9 @@
     dest: "{{ item.dest }}"
     repo: "{{ item.repo }}"
     version: master
+  async: 120
+  poll: 1
+  register: clone_vim
   tags:
     - vim
   loop:
@@ -71,6 +67,12 @@
     - repo: "https://github.com/airblade/vim-gitgutter"
       dest: "./src/github.com/airblade/vim-gitgutter"
 
+- name: Clone VIM repositories join
+  async_status: jid={{ clone_vim.ansible_job_id }}
+  register: job_result
+  until: job_result.finished
+  retries: 300
+
 - name: Link VIM Pathogen
   file:
     src: "{{playbook_dir}}/src/github.com/tpope/vim-pathogen/autoload/pathogen.vim"
@@ -84,6 +86,8 @@
     src: "{{playbook_dir}}/{{ item.src }}"
     dest: "{{ item.dest }}"
     state: link
+  async: 120
+  poll: 1
   tags:
     - vim
   loop:
@@ -108,7 +112,6 @@
     - src: "./src/github.com/airblade/vim-gitgutter"
       dest: "~/.vim/bundle/vim-gitgutter"
 
-
 - name: Link .vim/after
   file:
     src: "{{playbook_dir}}/home/vim/after"
@@ -121,14 +124,6 @@
   file:
     src: "{{playbook_dir}}/src/github.com/chriskempson/base16-vim/colors/base16-tomorrow.vim"
     dest: "~/.vim/colors/base16-tomorrow.vim"
-    state: link
-  tags:
-    - vim
-
-- name: Link .vim/colors
-  file:
-    src: "{{playbook_dir}}/home/vim/colors"
-    dest: "~/.vim/colors"
     state: link
   tags:
     - vim
