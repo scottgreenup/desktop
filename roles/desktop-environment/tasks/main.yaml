@@ -114,7 +114,7 @@
   tags:
     - vim
 
-- name: Link .vim/colors/base16
+- name: Link .vim/colors/base16-tomorrow
   file:
     src: "{{playbook_dir}}/src/github.com/chriskempson/base16-vim/colors/base16-tomorrow.vim"
     dest: "~/.vim/colors/base16-tomorrow.vim"
@@ -167,7 +167,7 @@
   tags:
     - awesome
 
-- name: Clone github.com/NuckChorris/assault
+- name: Clone github.com/scottgreenup/lain
   git:
     dest: "./src/github.com/scottgreenup/lain"
     repo: "https://github.com/scottgreenup/lain.git"
@@ -181,13 +181,20 @@
   tags:
     - awesome
 
-- name: Clone github.com/NuckChorris/assault
+- name: Clone github.com/majutsushi/urxvt-font-size
   git:
     dest: "./src/github.com/majutsushi/urxvt-font-size"
     repo: "https://github.com/majutsushi/urxvt-font-size.git"
     version: master
 
-- name: Link .config/awesome/lain
+- name: Create .urxvt/ext
+  file:
+    path: "~/.urxvt/ext"
+    state: directory
+  tags:
+    - awesome
+
+- name: Link urxvt-font-size
   file:
     src: "{{playbook_dir}}/src/github.com/majutsushi/urxvt-font-size/font-size"
     dest: "~/.urxvt/ext/font-size"
@@ -213,19 +220,6 @@
     src: "{{playbook_dir}}/bin"
     dest: "~/bin"
     state: link
-
-- name: Link bin/
-  file:
-    src: "{{playbook_dir}}/bin"
-    dest: "~/bin"
-    state: link
-
-- name: Create .urxvt/ext
-  file:
-    path: "~/.urxvt/ext"
-    state: directory
-  tags:
-    - awesome
 
 - name: Link dotfiles
   file:
