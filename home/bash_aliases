@@ -56,14 +56,11 @@ alias kchour="eval \`keychain --eval --agents ssh --timeout 60 --quiet id_rsa\`"
 # Aliases for Git
 alias g='/usr/bin/git status'
 alias gu='/usr/bin/git pull'
-#alias gp='/usr/bin/git push'
 alias ga='/usr/bin/git add'
 alias gd='/usr/bin/git diff'
 alias gda='/usr/bin/git diff -U99999'
 alias gb='/usr/bin/git branch'
 alias gba='/usr/bin/git branch -a'
-#alias gc='/usr/bin/git commit'
-alias gca='/usr/bin/git commit -a'
 alias gco='/usr/bin/git checkout'
 alias gm="/usr/bin/git merge --no-ff"
 alias gff="/usr/bin/git merge --ff-only"
@@ -123,6 +120,26 @@ function gp() {
         read -n 1
     fi
 }
+
+if [[ -f "/usr/share/git/completion/git-completion.bash" ]]; then
+    . /usr/share/git/completion/git-completion.bash
+
+    __git_complete gco _git_checkout
+    __git_complete g _git_status
+    __git_complete gu _git_pull
+    __git_complete gp _git_push
+    __git_complete ga _git_add
+    __git_complete gd _git_diff
+    __git_complete gda _git_diff
+    __git_complete gb _git_branch
+    __git_complete gba _git_branch
+    __git_complete gc _git_commit
+    __git_complete gca _git_commit
+    __git_complete gco _git_checkout
+    __git_complete gm _git_merge
+    __git_complete gff _git_merge
+fi
+
 
 # Docker
 alias d="/usr/bin/sudo /usr/bin/docker"

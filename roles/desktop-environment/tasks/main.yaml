@@ -1,0 +1,268 @@
+---
+- name: Clone github.com/chriskempson/base16-shell
+  git:
+    dest: ./src/github.com/chriskempson/base16-shell
+    repo: "https://github.com/chriskempson/base16-shell.git"
+    version: master
+
+- name: Create .config
+  file:
+    path: "~/.config"
+    state: directory
+
+- name: Link github.com/chriskempson/base16-shell
+  file:
+    src: "{{playbook_dir}}/src/github.com/chriskempson/base16-shell"
+    dest: "~/.config/base16-shell"
+    state: link
+  tags:
+    - vim
+
+# VIM
+
+- name: Create VIM directories
+  file:
+    path: "~/{{item}}"
+    state: directory
+  loop:
+    - ".vim"
+    - ".vim/autoload"
+    - ".vim/bundle"
+    - ".vim/colors"
+    - ".vim/ftplugin"
+  tags:
+    - vim
+
+- name: Clone VIM repositories
+  git:
+    dest: "{{ item.dest }}"
+    repo: "{{ item.repo }}"
+    version: master
+  async: 120
+  poll: 1
+  register: clone_vim
+  tags:
+    - vim
+  loop:
+    - repo: "https://github.com/tpope/vim-pathogen.git"
+      dest: "./src/github.com/tpope/vim-pathogen"
+    - repo: "https://github.com/chriskempson/base16-vim.git"
+      dest: "./src/github.com/chriskempson/base16-vim"
+    - repo: "https://github.com/scrooloose/nerdtree.git"
+      dest: "./src/github.com/scrooloose/nerdtree"
+    - repo: "https://github.com/ntpeters/vim-better-whitespace.git"
+      dest: "./src/github.com/ntpeters/vim-better-whitespace"
+    - repo: "https://github.com/pangloss/vim-javascript.git"
+      dest: "./src/github.com/pangloss/vim-javascript"
+    - repo: "https://github.com/tpope/vim-fugitive"
+      dest: "./src/github.com/tpope/vim-fugitive"
+    - repo: "https://github.com/tomlion/vim-solidity"
+      dest: "./src/github.com/tomlion/vim-solidity"
+    - repo: "https://github.com/nvie/vim-flake8"
+      dest: "./src/github.com/nvie/vim-flake8"
+    - repo: "https://github.com/ekalinin/Dockerfile.vim"
+      dest: "./src/github.com/ekalinin/Dockerfile.vim"
+    - repo: "https://github.com/junegunn/fzf"
+      dest: "./src/github.com/junegunn/fzf"
+    - repo: "https://github.com/airblade/vim-gitgutter"
+      dest: "./src/github.com/airblade/vim-gitgutter"
+
+- name: Link VIM Pathogen
+  file:
+    src: "{{playbook_dir}}/src/github.com/tpope/vim-pathogen/autoload/pathogen.vim"
+    dest: "~/.vim/autoload/pathogen.vim"
+    state: link
+  tags:
+    - vim
+
+- name: Link VIM packages
+  file:
+    src: "{{playbook_dir}}/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: link
+  async: 120
+  poll: 1
+  tags:
+    - vim
+  loop:
+    - src: "./src/github.com/chriskempson/base16-vim"
+      dest: "~/.vim/bundle/base16-vim"
+    - src: "./src/github.com/scrooloose/nerdtree"
+      dest: "~/.vim/bundle/nerdtree"
+    - src: "./src/github.com/ntpeters/vim-better-whitespace"
+      dest: "~/.vim/bundle/vim-better-whitespace"
+    - src: "./src/github.com/pangloss/vim-javascript"
+      dest: "~/.vim/bundle/vim-javascript"
+    - src: "./src/github.com/tpope/vim-fugitive"
+      dest: "~/.vim/bundle/vim-fugitive"
+    - src: "./src/github.com/tomlion/vim-solidity"
+      dest: "~/.vim/bundle/vim-solidity"
+    - src: "./src/github.com/nvie/vim-flake8"
+      dest: "~/.vim/bundle/vim-flake8"
+    - src: "./src/github.com/ekalinin/Dockerfile.vim"
+      dest: "~/.vim/bundle/Dockerfile"
+    - src: "./src/github.com/junegunn/fzf"
+      dest: "~/.vim/bundle/vim-fzf"
+    - src: "./src/github.com/airblade/vim-gitgutter"
+      dest: "~/.vim/bundle/vim-gitgutter"
+
+- name: Link .vim/after
+  file:
+    src: "{{playbook_dir}}/home/vim/after"
+    dest: "~/.vim/after"
+    state: link
+  tags:
+    - vim
+
+- name: Link .vim/colors/base16-tomorrow
+  file:
+    src: "{{playbook_dir}}/src/github.com/chriskempson/base16-vim/colors/base16-tomorrow.vim"
+    dest: "~/.vim/colors/base16-tomorrow.vim"
+    state: link
+  tags:
+    - vim
+
+- name: Link .vimrc
+  file:
+    src: "{{playbook_dir}}/home/vimrc"
+    dest: "~/.vimrc"
+    state: link
+  tags:
+    - vim
+
+- name: Create .config/awesome
+  file:
+    path: "~/.config/awesome"
+    state: directory
+  tags:
+    - awesome
+
+- name: Link .config/awesome/rc.lua
+  file:
+    src: "{{playbook_dir}}/home/config/awesome/rc.lua"
+    dest: "~/.config/awesome/rc.lua"
+    state: link
+  tags:
+    - awesome
+
+- name: Link .config/awesome/themes
+  file:
+    src: "{{playbook_dir}}/home/config/awesome/themes"
+    dest: "~/.config/awesome/themes"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/NuckChorris/assault
+  git:
+    dest: "./src/github.com/NuckChorris/assault"
+    repo: "https://github.com/NuckChorris/assault.git"
+    version: master
+
+- name: Link .config/awesome/assault.lua
+  file:
+    src: "{{playbook_dir}}/src/github.com/NuckChorris/assault/awesomewm/assault.lua"
+    dest: "~/.config/awesome/assault.lua"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/scottgreenup/lain
+  git:
+    dest: "./src/github.com/scottgreenup/lain"
+    repo: "https://github.com/scottgreenup/lain.git"
+    version: master
+
+- name: Link .config/awesome/lain
+  file:
+    src: "{{playbook_dir}}/src/github.com/scottgreenup/lain"
+    dest: "~/.config/awesome/lain"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/majutsushi/urxvt-font-size
+  git:
+    dest: "./src/github.com/majutsushi/urxvt-font-size"
+    repo: "https://github.com/majutsushi/urxvt-font-size.git"
+    version: master
+
+- name: Create .urxvt/ext
+  file:
+    path: "~/.urxvt/ext"
+    state: directory
+  tags:
+    - awesome
+
+- name: Link urxvt-font-size
+  file:
+    src: "{{playbook_dir}}/src/github.com/majutsushi/urxvt-font-size/font-size"
+    dest: "~/.urxvt/ext/font-size"
+    state: link
+  tags:
+    - awesome
+
+- name: Clone github.com/vicious-widgets/vicious
+  git:
+    dest: "./src/github.com/vicious-widgets/vicious"
+    repo: "https://github.com/vicious-widgets/vicious.git"
+    version: master
+
+- name: Copy vicious
+  copy:
+    src: "{{playbook_dir}}/src/github.com/vicious-widgets/vicious/"
+    dest: "~/.config/awesome/vicious"
+  tags:
+    - awesome
+
+- name: Link bin/
+  file:
+    src: "{{playbook_dir}}/bin"
+    dest: "~/bin"
+    state: link
+
+- name: Link dotfiles
+  file:
+    src: "{{playbook_dir}}/{{item.src}}"
+    dest: "~/{{item.dest}}"
+    state: link
+    force: yes
+  loop:
+    - src: home/xmodmaprc
+      dest: .Xmodmap
+    - src: home/xprofile
+      dest: .xprofile
+    - src: home/bashrc
+      dest: .bashrc
+    - src: home/bash_aliases
+      dest: .bash_aliases
+    - src: home/Xresources
+      dest: .Xresources
+    - src: home/inputrc
+      dest: .inputrc
+    - src: home/xinitrc
+      dest: .xinitrc
+
+- name: Create /etc/lightdm
+  file:
+    path: "/etc/lightdm"
+    state: directory
+  become: true
+
+- name: Copy /etc/lightdm/lightdm.conf
+  copy:
+    src: "{{playbook_dir}}/etc/lightdm/lightdm.conf"
+    dest: "/etc/lightdm/lightdm.conf"
+  become: true
+
+- name: Enable LightDM
+  become: true
+  systemd:
+    name: lightdm
+    enabled: yes
+
+- name: Enable NetworkManager
+  become: true
+  systemd:
+    name: NetworkManager
+    enabled: yes

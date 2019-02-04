@@ -30,3 +30,10 @@ $ git submodule add -- url.com/a/b submodules/a/b
 $ vim deploy.sh
 # Change it to make symlinks
 ```
+
+
+
+# Implicit Contributors
+
+  - Helped with Ansible setup
+    - [Oliver Dolbeau](https://odolbeau.fr/blog/how-to-install-your-laptop-with-ansible.html)

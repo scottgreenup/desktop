@@ -1,0 +1,122 @@
+---
+- name: install common fonts
+  become: true
+  pacman: name="{{item.packages}}" update_cache=yes state=present
+  loop:
+    - packages:
+      - ttf-anonymous-pro
+      - ttf-baekmuk
+      - ttf-dejavu
+      - ttf-fira-mono
+      - ttf-fira-sans
+      - ttf-freefont
+      - ttf-hack
+      - ttf-hanazono
+      - ttf-inconsolata
+      - ttf-liberation
+      - ttf-roboto
+      - ttf-sazanami
+      - ttf-ubuntu-font-family
+
+- name: install CLI utilities
+  become: true
+  pacman: name="{{item.packages}}" update_cache=yes state=present
+  loop:
+    - packages:
+      - aspell
+      - aspell-en
+      - autojump
+      - bash
+      - bash-completion
+      - bat
+      - bind-tools
+      - encfs
+      - fzf
+      - git
+      - gnupg
+      - htop
+      - jq
+      - nmap
+      - ripgrep
+      - rsync
+      - sed
+      - the_silver_searcher
+      - tmux
+      - tree
+      - unzip
+      - vim
+
+- name: install python environment
+  become: true
+  pacman: name="{{item.packages}}" update_cache=yes state=present
+  loop:
+    - packages:
+      - python
+      - python2
+      - python-virtualenv
+      - python-virtualenvwrapper
+
+- name: install go environment
+  become: true
+  pacman: name="{{item.packages}}" update_cache=yes state=present
+  loop:
+    - packages:
+      - go
+      - dep
+
+- name: install networking packages
+  become: true
+  pacman: name="{{item.packages}}" update_cache=yes state=present
+  loop:
+    - packages:
+      - net-tools
+      - networkmanager
+      - networkmanager-openconnect
+      - openssh
+
+- name: install desktop environment
+  become: true
+  pacman: name="{{item.packages}}" update_cache=yes state=present
+  loop:
+    - packages:
+      - arandr
+      - awesome
+      - firefox
+      - flameshot
+      - i3lock
+      - keepassxc
+      - lightdm
+      - lightdm-gtk-greeter
+      - network-manager-applet
+      - nitrogen
+      - pavucontrol
+      - peek
+      - redshift
+      - rxvt-unicode
+      - scrot
+      - xf86-video-fbdev
+      - xf86-video-vesa
+      - xorg
+      - xorg-apps
+      - xorg-drivers
+      - xorg-xinit
+
+# Bluetooth for particular shiznit
+# - blueman
+# - bluez
+# - bluez-libs
+# - bluez-utils
+
+# Items on the AUR
+# - ttf-fantasque-sans-mono
+# - discord
+#   - libc++
+# - dmenu2
+# - dropbox
+# - fantasque-sans-mono
+# - kubectl-bin
+# - kubectx
+# - peek
+# - ttf-roboto-mono
+# - ttf-roboto-mono
+# - yq
