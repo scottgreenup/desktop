@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+python3exe="/usr/bin/python3"
+python2exe="/usr/bin/python2"
+
+target="/usr/bin/python"
+
+if ! readlink "${target}" > /dev/null; then
+    echo  "${target} is not a symlink"
+    exit 1
+fi
+
+current=$(readlink "${target}")
+
+sudo rm /usr/bin/python
+if [[ "${current}" == "/usr/bin/python3" ]]; then
+    sudo ln -s "${python2exe}" "${target}"
+elif [[ "${current}" == "/usr/bin/python2" ]]; then
+    sudo ln -s "${python3exe}" "${target}"
+else
+    sudo ln -s "${python3exe}" "${target}"
+fi
+
+echo "which python: $(which python)"
+echo "current link: $(readlink "${target}")"

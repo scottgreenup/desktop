@@ -250,6 +250,8 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
 " Toggle numbers with \n
 nmap <silent> <leader>n  :set nonu! <bar> set nornu!<CR>
+nmap <silent> <leader>g  :GitGutterDisable<CR>
+nmap <silent> <leader>G  :GitGutterEnable<CR>
 
 " Toggle paste with \p
 nmap <silent> <leader>p  :set nopaste!<CR>

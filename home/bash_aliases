@@ -8,9 +8,30 @@ function ifconfig() {
     echo "use 'ip addr show' or 'ip a' for short"
 }
 
+# JQ aliases
+# TODO move to json-util
+function jqhead() {
+    number=$1
+
+    if [[ -z "${number}" ]]; then
+        number=1
+    fi
+
+    repeated=$(python -c "print('[]?' * ${number})")
+
+    jq 'reduce path(.'"${repeated}"') as $path (.; setpath($path; {}))'
+}
+
+# play creates a temporary directory to test out an idea
+function play() {
+    DIR=$(mktemp -d)
+    cd $DIR
+    export PLAY=$DIR
+}
 
 # Specialized commands
-alias murder="shred -uvzn 20"
+alias murder="echo 'please use decimate'"
+alias decimate="shred -uvzn 20"
 alias fucking="sudo"
 alias please='sudo'
 
@@ -39,38 +60,40 @@ alias sum="awk '{sum+=\$1} END {print sum}'"
 alias c='clear'
 alias cls="clear && ls -l"
 alias clt="clear && tree"
+alias cp='cp -i'
+alias grep='grep -i --color'
 alias less="less -r"
 alias ls='ls --color=auto'
 alias l='ls -ohL --group-directories-first'
 alias lt='ls -lhtc'
 alias la='ls -lha --group-directories-first'
 alias ll='ls -l --group-directories-first'
+alias mnt="mount -o uid=$USER,fmask=0133,dmask=0022"
 alias rm='rm -i'
-alias cp='cp -i'
-alias grep='grep -i --color'
 
 # Keychain commands
-alias kc="eval \`keychain --eval --agents ssh --timeout 5 --quiet id_rsa\`"
+alias kc="eval \`keychain --eval --agents ssh --timeout 5 --quiet personal\`"
 alias kchour="eval \`keychain --eval --agents ssh --timeout 60 --quiet id_rsa\`"
 
+# ==============================================================================
 # Aliases for Git
+# gc, gca, and gp are functions below
 alias g='/usr/bin/git status'
 alias gu='/usr/bin/git pull'
-#alias gp='/usr/bin/git push'
 alias ga='/usr/bin/git add'
 alias gd='/usr/bin/git diff'
 alias gda='/usr/bin/git diff -U99999'
 alias gb='/usr/bin/git branch'
 alias gba='/usr/bin/git branch -a'
-#alias gc='/usr/bin/git commit'
-alias gca='/usr/bin/git commit -a'
 alias gco='/usr/bin/git checkout'
 alias gm="/usr/bin/git merge --no-ff"
 alias gff="/usr/bin/git merge --ff-only"
 
 # https://git-scm.com/docs/pretty-formats
-GIT_LOG_FORMAT='%Cred%h%Creset -%C(yellow)%-d%C(reset) %s %C(green)[%cr]%C(reset) %C(bold blue)%an <%ae>%C(reset) %C(cyan)%G?%C(reset)'
+GIT_LOG_FORMAT='%Cred%h%Creset -%C(yellow)%-d%C(reset) %s %C(green)[%cr]%C(reset) %C(cyan)%G?%C(reset)'
 alias gl="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative"
+
+GIT_LOG_FORMAT='%Cred%h%Creset -%C(yellow)%-d%C(reset) %s %C(green)[%cr]%C(reset) %C(bold blue)%an <%ae>%C(reset) %C(cyan)%G?%C(reset)'
 alias gla="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative --all"
 alias gls="/usr/bin/git log --date-order --graph --pretty=format:'${GIT_LOG_FORMAT}' --abbrev-commit --date=relative --show-signature"
 alias gll="/usr/bin/git log --date-order --graph --oneline"
@@ -124,6 +147,7 @@ function gp() {
     fi
 }
 
+# ==============================================================================
 # Docker
 alias d="/usr/bin/sudo /usr/bin/docker"
 alias dn="/usr/bin/sudo /usr/bin/docker network"
@@ -141,13 +165,9 @@ alias dk="/usr/bin/sudo /usr/bin/docker-compose"
 alias dkps="/usr/bin/sudo /usr/bin/docker-compose ps"
 
 # Kubernetes
-function kubectl() {
-    echo "use 'k' instead"
-}
-
 alias k="/usr/bin/kubectl"
 alias kg="/usr/bin/kubectl get"
-alias kd="/usr/bin/kubectl get"
+alias kd="/usr/bin/kubectl describe"
 alias kcg="/usr/bin/kubectl config get-contexts"
 alias kcu="/usr/bin/kubectl config use-context"
 alias kcc="/usr/bin/kubectl config current-context"

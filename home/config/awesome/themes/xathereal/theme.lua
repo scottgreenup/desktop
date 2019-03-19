@@ -1,5 +1,15 @@
 
+local xresources = require("beautiful.xresources")
+local dpi = xresources.apply_dpi
+local gears = require("gears")
 
+local function debug_dump(message, thing, depth)
+    if depth ~= nil then
+        gears.debug.print_warning(gears.debug.dump_return(thing, message, depth))
+    else
+        gears.debug.print_warning(gears.debug.dump_return(thing, message))
+    end
+end
 
 theme_root = os.getenv("HOME") .. "/.config/awesome/themes/xathereal/"
 
@@ -7,7 +17,7 @@ theme            = {}
 theme.icons      = theme_root .. "icons/"
 theme.wallpaper  = theme_root .. "background.png"
 theme.panel      = "png:" .. theme.icons .. "/panel/panel.png"
-theme.font       = "Roboto 7"
+theme.font       = "Roboto 8"
 
 -- | Colours/Colors | --
 
@@ -25,18 +35,16 @@ theme.clockgf    = "#d5d5c3"
 
 theme.useless_gap = 0
 theme.gap_single_client = false
-theme.border_width  = 2
+theme.border_width  = dpi(1)
 theme.border_normal = "#000000"
 theme.border_focus  = "#FF6666"
 theme.border_marked = "#91231c"
 
 -- | Menu | --
 
-theme.menu_height = 22
-theme.menu_width  = 100
-
-
-theme.notification_width = 400
+theme.menu_height = dpi(12)
+theme.menu_width  = dpi(100)
+theme.notification_width = dpi(200)
 theme.notification_fg = "#282A2E"
 theme.notification_bg = "#C5C8C6"
 
@@ -51,15 +59,15 @@ theme.layout_tiletop    = theme.icons .. "/panel/layouts/tiletop.png"
 
 -- | Taglist | --
 
-theme.taglist_bg_empty    = "png:" .. theme.icons .. "/panel/taglist/empty.png"
-theme.taglist_bg_occupied = "png:" .. theme.icons .. "/panel/taglist/occupied.png"
-theme.taglist_bg_urgent   = "png:" .. theme.icons .. "/panel/taglist/urgent.png"
-theme.taglist_bg_focus    = "png:" .. theme.icons .. "/panel/taglist/focus.png"
-theme.taglist_font        = "Roboto 8"
+--theme.taglist_bg_empty    = "png:" .. theme.icons .. "/panel/taglist/empty.png"
+--theme.taglist_bg_occupied = "png:" .. theme.icons .. "/panel/taglist/occupied.png"
+--theme.taglist_bg_urgent   = "png:" .. theme.icons .. "/panel/taglist/urgent.png"
+--theme.taglist_bg_focus    = "png:" .. theme.icons .. "/panel/taglist/focus.png"
+--theme.taglist_font        = "Roboto 8"
 
 -- | Tasklist | --
 
-theme.tasklist_font                 = "Roboto 7"
+--theme.tasklist_font                 = "Roboto 7"
 theme.tasklist_disable_icon         = true
 --theme.tasklist_bg_normal            = "png:" .. theme.icons .. "panel/tasklist/normal.png"
 --theme.tasklist_bg_focus             = "png:" .. theme.icons .. "panel/tasklist/focus.png"

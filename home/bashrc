@@ -2,6 +2,29 @@
 
 # ~/.bashrc
 
+shopt -s cmdhist
+shopt -s lithist
+
+source ~/.bash_aliases
+
+if [[ -f "/usr/share/git/completion/git-completion.bash" ]]; then
+    . /usr/share/git/completion/git-completion.bash
+
+    __git_complete gco _git_checkout
+    __git_complete g _git_status
+    __git_complete gu _git_pull
+    __git_complete ga _git_add
+    __git_complete gd _git_diff
+    __git_complete gda _git_diff
+    __git_complete gb _git_branch
+    __git_complete gba _git_branch
+    __git_complete gca _git_commit
+    __git_complete gco _git_checkout
+    __git_complete gm _git_merge
+    __git_complete gff _git_merge
+    __git_complete gc _git_commit
+    __git_complete gp _git_push
+fi
 
 # Need to be PC
 alias person=man
@@ -13,10 +36,41 @@ export GOPATH="$HOME/go"
 # keyboard changes.
 setxkbmap -option caps:escape
 
-source ~/.bash_aliases
+export HISTCONTROL=ignoredups
+export HISTFILESIZE=500000
+export HISTSIZE=500000
+
+## Stolen from FZF forums
+# re-wrote the script above
+bind '"\C-r": "\C-x1\e^\er"'
+bind -x '"\C-x1": __fzf_history';
+
+if which fzf 2>/dev/null 1>/dev/null; then
+    __fzf_history ()
+    {
+    __ehc $(history | fzf --preview-window=hidden --tac --tiebreak=index | perl -ne 'm/^\s*([0-9]+)/ and print "!$1"')
+    }
+
+    __ehc()
+    {
+    if
+            [[ -n $1 ]]
+    then
+            bind '"\er": redraw-current-line'
+            bind '"\e^": magic-space'
+            READLINE_LINE=${READLINE_LINE:+${READLINE_LINE:0:READLINE_POINT}}${1}${READLINE_LINE:+${READLINE_LINE:READLINE_POINT}}
+            READLINE_POINT=$(( READLINE_POINT + ${#1} ))
+    else
+            bind '"\er":'
+            bind '"\e^":'
+    fi
+    }
+else
+    echo "Please install fzf: pacman -S fzf"
+fi
 
 # If not running interactively, don't do anything
-[[ $- != *i* ]] && return
+#[[ $- != *i* ]] && return
 
 bash_completion="/usr/share/bash-completion/bash_completion"
 [[ -f "${bash_completion}" ]] && . "${bash_completion}"
@@ -35,6 +89,9 @@ function reset_color() {
 
 function success_prompt() {
     local last_status="${?}"
+    if [[ $# -eq 1 ]]; then
+        last_status=$1
+    fi
     local success="^_^"
     local failure="0_o"
     if [[ "${last_status}" != "0" ]]; then
@@ -45,11 +102,13 @@ function success_prompt() {
 }
 
 function bash_prompt_impl() {
-    last_status=$(success_prompt)
+    if [[ $# -eq 1 ]]; then
+        last_status=$(success_prompt $1)
+    else
+        last_status=$(success_prompt)
+    fi
 
-    history -a
-    history -c
-    history -r
+    #history -r
 
     local login
     local time
@@ -57,7 +116,12 @@ function bash_prompt_impl() {
 
     login="$(color 4)\u$(reset_color)@$(color 6)\H$(reset_color)"
     time="$(color 5)\t$(reset_color)"
-    directory="$(color 3)\w$(reset_color)"
+
+    if which lolcat >/dev/null 2>/dev/null; then
+        directory="$(dirs +0 | tr -d '\n' | lolcat --horizontal 1 --force)$(reset_color)"
+    else
+        directory="$(color 3)\w$(reset_color)"
+    fi
 
     local virtualenv
 
@@ -145,8 +209,11 @@ function bash_prompt_impl() {
 }
 
 function bash_prompt() {
-
-    PS1=`bash_prompt_impl`
+    last_status=$?
+    history -a
+    history -c
+    history -r
+    PS1=$(bash_prompt_impl ${last_status})
 }
 
 
@@ -242,23 +309,16 @@ function base16 () {
 base16
 
 # Environment variables
+if !which stfu 2>/dev/null 1>/dev/null; then
+    export PATH="$PATH:$HOME/bin/"
+fi
+
+# It's already in xprofile
 export PATH="$PATH:$HOME/arc/arcanist/bin/"
-export PATH="$PATH:$HOME/go/bin"
+export PATH="$PATH:$HOME/go/bin/"
+export PATH="$PATH:$HOME/bin-atlassian/"
 export TERM='rxvt-256color'
 export EDITOR='vim'
-
-export HISTFILESIZE=500000
-export HISTCONTROL=ignoreboth
-export HISTSIZE=500000
-
-# &    => ignore duplicate commands
-# [ ]* => ignore commands starting with a space
-# exit => forget exit
-export HISTIGNORE="&:[ ]*:exit:ls:clear:l:la:c:gla:g"
-export HISTTIMEFORMAT='%F %T '
-
-shopt -s histappend
-#PROMPT_COMMAND="$PROMPT_COMMAND"
 
 source "/usr/bin/virtualenvwrapper.sh" 1>/dev/null
 source "/etc/profile.d/autojump.bash"

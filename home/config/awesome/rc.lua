@@ -20,9 +20,12 @@
 
 
 -- | Libraries | --
+--
+local xresources = require("beautiful.xresources")
 
 local gears = require("gears")
 local awful = require("awful")
+local cairo = require("lgi").cairo
 local assault = require("assault")      -- battery widget
 local beautiful = require("beautiful")  -- theme management
 local common = require("awful.widget.common")
@@ -30,6 +33,10 @@ local lain = require("lain")            -- layouts, widgets, and utilities
 local naughty = require("naughty")      -- notification library
 local wibox = require("wibox")          -- widget and layout library
 local vicious = require("vicious")      -- system widgets
+
+local round = require("gears.math").round
+
+local awfulremote = require("awful.remote")
 
 awful.rules = require("awful.rules")
 
@@ -59,17 +66,31 @@ do
     end)
 end
 
+local function dpi(size)
+    return round(size / 96 * screen[1].dpi)
+end
+
+
 --------------------------------------------------------------------------------
--- Just a quick print function that relies on naughty notification boxes. E.g.:
+-- Just a quick print function that relies on gears
 --      debug_print(string.format("%d\n", myTag.index))
 --------------------------------------------------------------------------------
-local function debug_print(words)
-    naughty.notify({
-        preset = naughty.config.presets.critical,
-        title = "Debug Message",
-        text = words,
-        width = 400
-    })
+local function debug_print(message)
+    gears.debug.print_warning(message)
+end
+
+local function debug_dump(message, thing, depth)
+    if depth ~= nil then
+        gears.debug.print_warning(gears.debug.dump_return(thing, message, depth))
+    else
+        gears.debug.print_warning(gears.debug.dump_return(thing, message))
+    end
+end
+
+local rounded_rect = function(radius)
+    return function(cr, width, height)
+        gears.shape.rounded_rect(cr, width, height, radius)
+    end
 end
 
 naughty.config.notify_callback = function(args)
@@ -80,8 +101,29 @@ naughty.config.notify_callback = function(args)
 
     if args.icon then
         if args.icon_size == nil or args.icon_size > 50 then
-            args.icon_size = 50
+            args.icon_size = 70
         end
+    end
+
+    args.font = "Roboto 7"
+    args.shape = rounded_rect(5)
+    args.opacity = 0.95
+
+    local currScreen = awful.screen.focused()
+    if args.screen ~= nil then
+        currScreen = args.screen
+    end
+
+    -- TODO The default width can be in the theme
+    --local minWidth = currScreen.geometry.width * 0.15
+    --if args.width == nil then
+    --    args.width = minWidth
+    --elseif args.width < minWidth then
+    --    args.width = minWidth
+    --end
+
+    if args.title == nil or args.title == "" then
+        args.title = "Notification"
     end
 
     return args
@@ -92,7 +134,7 @@ theme_dir = os.getenv("HOME") .. "/.config/awesome/themes/"
 beautiful.init(theme_dir .. "xathereal/theme.lua")
 
 local home   = os.getenv("HOME")
-local exec   = function (s) awful.util.spawn(s, false) end
+local exec   = function (s) awful.spawn(s, false) end
 
 local modkey = "Mod4"
 
@@ -101,7 +143,7 @@ programs = {}
 programs["audio"]       = "pavucontrol"
 programs["browser"]     = "firefox"
 programs["terminal"]    = "urxvt"
-programs["lock"]        = "i3lock -c 000000 -f"
+programs["lock"]        = "xscreensaver-command -lock"
 programs["randr"]       = "arandr"
 programs["editor"]      = os.getenv("EDITOR") or "vim"
 programs["editor_cmd"]  = programs["terminal"] .. " -e " .. programs["editor"]
@@ -124,6 +166,7 @@ for s = 1, screen.count() do
     shared_tag_list[s].screen = s
     awful.tag.viewnone(screen[s])
     awful.tag.viewmore({shared_tag_list[s]})
+    debug_dump("DPI", screen[s].dpi)
 end
 
 -- | Screen ordering | --
@@ -155,10 +198,24 @@ end
 -- | Markup | --
 
 local markup = lain.util.markup
-local space3 = markup.font("Roboto 3", " ")
+local space3 = markup.font("Roboto 3", "  ")
 local space4 = markup.font("Roboto 4", " ")
 local vspace1 = '<span font="Roboto 3"> </span>'
 local vspace2 = '<span font="Roboto 3">  </span>'
+
+local rounded_rect_top = function(radius)
+    local gap = dpi(1)
+    return function(cr, width, height)
+        local shape = gears.shape.transform(gears.shape.rounded_rect):translate(0, gap)
+        shape(cr, width, height-(gap*2), radius)
+    end
+end
+
+local widget_dark = "#252525"
+local widget_radius = 5
+local widget_background = function(w)
+    return wibox.container.background(w, widget_dark, rounded_rect_top(widget_radius))
+end
 
 -- | Widgets | --
 
@@ -182,111 +239,85 @@ widget_display_c:set_image(beautiful.widget_display_c)
 
 cpu_widget = lain.widget.cpu({
     settings = function()
-        widget:set_markup(space3 .. cpu_now.usage .. "%" .. markup.font("Tamsyn 4", " "))
+        widget:set_markup(space3 .. cpu_now.usage .. "%" .. space3)
     end
 })
 
-widget_cpu = wibox.widget.imagebox()
-widget_cpu:set_image(beautiful.widget_cpu)
-cpuwidget = wibox.widget.background()
-cpuwidget:set_widget(cpu_widget.widget)
-cpuwidget:set_bgimage(beautiful.widget_display)
+local function dark_label(text)
+    return wibox.widget.textbox(space3 .. "<span font=\"Roboto Black\"color=\"" .. widget_dark .. "\">" .. text .. "</span>" .. space3)
+end
+
+widget_cpu = dark_label("CPU")
+cpuwidget = widget_background(cpu_widget.widget)
 
 tmp_widget = wibox.widget.textbox()
-vicious.register(tmp_widget, vicious.widgets.thermal, vspace1 .. "$1°C" .. vspace1, 9, "thermal_zone0")
-
-widget_tmp = wibox.widget.imagebox()
-widget_tmp:set_image(beautiful.widget_tmp)
-tmpwidget = wibox.widget.background()
-tmpwidget:set_widget(tmp_widget)
-tmpwidget:set_bgimage(beautiful.widget_display)
+vicious.register(tmp_widget, vicious.widgets.thermal, space3 .. "$1°C" .. space3, 9, "thermal_zone0")
+tmpwidget = widget_background(tmp_widget)
 
 -- | BAT | --
 
-
 battery_widget = lain.widget.bat({
     settings = function()
-        widget:set_markup(space3 .. bat_now.perc .. "%" .. markup.font("Tamsyn 4", " "))
+        widget:set_markup(space3 .. bat_now.perc .. "%" .. space3)
     end
 })
 
-widget_bat = wibox.widget.imagebox()
-widget_bat:set_image(beautiful.widget_bat)
-batwidget = wibox.widget.background()
-batwidget:set_widget(battery_widget.widget)
-batwidget:set_bgimage(beautiful.widget_display)
-
+widget_bat = dark_label("BAT")
+batwidget = widget_background(battery_widget.widget)
 
 -- | MEM | --
 
 mem_widget = lain.widget.mem({
     settings = function()
-        widget:set_markup(space3 .. mem_now.perc .. "%" .. markup.font("Tamsyn 4", " "))
+        widget:set_markup(space3 .. mem_now.perc .. "%" .. space3)
     end
 })
 
-widget_mem = wibox.widget.imagebox()
-widget_mem:set_image(beautiful.widget_mem)
-memwidget = wibox.widget.background()
-memwidget:set_widget(mem_widget.widget)
-memwidget:set_bgimage(beautiful.widget_display)
+widget_mem = dark_label("MEM")
+memwidget = widget_background(mem_widget.widget)
 
 -- | FS | --
 
 fs_widget = wibox.widget.textbox()
-vicious.register(fs_widget, vicious.widgets.fs, vspace1 .. "${/ avail_gb}GB" .. vspace1, 2)
+vicious.register(fs_widget, vicious.widgets.fs, space3 .. "${/ avail_gb}GB" .. space3, 2)
 
-widget_fs = wibox.widget.imagebox()
-widget_fs:set_image(beautiful.widget_fs)
-fswidget = wibox.widget.background()
-fswidget:set_widget(fs_widget)
-fswidget:set_bgimage(beautiful.widget_display)
+widget_fs = dark_label("HDD")
+fswidget = widget_background(fs_widget)
 
 -- | NET | --
 
-net_widgetdl = wibox.widget.textbox()
 net_widgetul = lain.widget.net({
     iface = "wlp2s0",
     settings = function()
-        widget:set_markup(markup.font("Tamsyn 1", "  ") .. net_now.sent)
-        net_widgetdl:set_markup(markup.font("Tamsyn 1", " ") .. net_now.received .. markup.font("Tamsyn 1", " "))
+        widget:set_markup(space3 .. net_now.sent .. space3)
+    end
+})
+
+net_widgetdl = lain.widget.net({
+    iface = "wlp2s0",
+    settings = function()
+        widget:set_markup(space3 .. net_now.received .. space3)
     end
 })
 
 widget_netdl = wibox.widget.imagebox()
 widget_netdl:set_image(beautiful.widget_netdl)
-netwidgetdl = wibox.widget.background()
-netwidgetdl:set_widget(net_widgetdl)
-netwidgetdl:set_bgimage(beautiful.widget_display)
+netwidgetdl = widget_background(net_widgetdl.widget)
 
 widget_netul = wibox.widget.imagebox()
 widget_netul:set_image(beautiful.widget_netul)
-netwidgetul = wibox.widget.background()
-netwidgetul:set_widget(net_widgetul.widget)
-netwidgetul:set_bgimage(beautiful.widget_display)
+netwidgetul = widget_background(net_widgetul.widget)
 
 -- | Clock / Calendar | --
 
-mytextclock    = awful.widget.textclock(
-    markup(
-        beautiful.clockgf,
-        space3 .. "%H:%M" .. markup.font("Tamsyn 3", " ")))
-mytextcalendar = awful.widget.textclock(
+mytextclock = wibox.widget.textclock(
+    markup(beautiful.clockgf, space3 .. "%H:%M" .. space3))
+mytextcalendar = wibox.widget.textclock(
     markup(beautiful.clockgf, space3 .. "%a %d %b"))
 
-widget_clock = wibox.widget.imagebox()
-widget_clock:set_image(beautiful.widget_clock)
+clockwidget = widget_background(mytextclock)
 
-clockwidget = wibox.widget.background()
-clockwidget:set_widget(mytextclock)
-clockwidget:set_bgimage(beautiful.widget_display)
-
-widget_date = wibox.widget.imagebox()
-widget_date:set_image(beautiful.widget_cal)
-
-datewidget = wibox.widget.background()
-datewidget:set_widget(mytextcalendar)
-datewidget:set_bgimage(beautiful.widget_display)
+datewidget = widget_background(mytextcalendar)
 
 -- | Task List | --
 
@@ -360,13 +391,15 @@ for s = 1, screen.count() do
 
     -- Create the wibox
     mywibox[s] = awful.wibar({
-        position = "top", screen = s, height = beautiful.menu_height })
+        position = "top",
+        screen = s,
+        height = beautiful.menu_height
+    })
 
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(spr5px)
     left_layout:add(mytaglist[s])
-    left_layout:add(spr5px)
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
@@ -380,62 +413,44 @@ for s = 1, screen.count() do
     right_layout:add(spr)
 
     right_layout:add(widget_cpu)
-    right_layout:add(widget_display_l)
     right_layout:add(cpuwidget)
-    right_layout:add(widget_display_r)
-    right_layout:add(widget_display_l)
+    right_layout:add(spr5px)
     right_layout:add(tmpwidget)
-    right_layout:add(widget_tmp)
-    right_layout:add(widget_display_r)
     right_layout:add(spr5px)
 
     right_layout:add(spr)
 
     right_layout:add(widget_mem)
-    right_layout:add(widget_display_l)
     right_layout:add(memwidget)
-    right_layout:add(widget_display_r)
     right_layout:add(spr5px)
 
     right_layout:add(spr)
 
     right_layout:add(widget_bat)
-    right_layout:add(widget_display_l)
     right_layout:add(batwidget)
-    right_layout:add(widget_display_r)
     right_layout:add(spr5px)
 
     right_layout:add(spr)
 
     right_layout:add(widget_fs)
-    right_layout:add(widget_display_l)
     right_layout:add(fswidget)
-    right_layout:add(widget_display_r)
     right_layout:add(spr5px)
 
     right_layout:add(spr)
 
     right_layout:add(widget_netdl)
-    right_layout:add(widget_display_l)
     right_layout:add(netwidgetdl)
-    right_layout:add(widget_display_c)
+    right_layout:add(spr5px)
     right_layout:add(netwidgetul)
-    right_layout:add(widget_display_r)
     right_layout:add(widget_netul)
 
     right_layout:add(spr)
 
-    right_layout:add(widget_clock)
-    right_layout:add(widget_display_l)
-    right_layout:add(clockwidget)
-    right_layout:add(widget_display_r)
-    right_layout:add(widget_date)
-    right_layout:add(widget_display_l)
-    right_layout:add(datewidget)
-    right_layout:add(widget_display_r)
     right_layout:add(spr5px)
-
-    right_layout:add(spr)
+    right_layout:add(clockwidget)
+    right_layout:add(spr5px)
+    right_layout:add(datewidget)
+    right_layout:add(spr5px)
 
     -- Now bring it all together (with the tasklist in the middle)
     local layout = wibox.layout.align.horizontal()
@@ -471,7 +486,7 @@ end
 
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
-    awful.button({ }, 3, function () mymainmenu:toggle() end),
+    awful.button({ }, 3, function () end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
@@ -530,7 +545,8 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "s", function () focus_on_screen(1, screen_map) end),
     awful.key({ modkey,           }, "d", function () focus_on_screen(2, screen_map) end),
     awful.key({ modkey,           }, "f", function () focus_on_screen(3, screen_map) end),
-    awful.key({ modkey, "Shift"   }, "t", function () reset_to_primary() end),
+    awful.key({ modkey, "Control" }, "t", function () reset_to_primary() end),
+    awful.key({ modkey, "Control" }, "x", function () spawn_program("fix_black_laptop_screen") end),
 
     -- Standard program
     awful.key({ modkey,           }, "w", function ()       spawn_program(programs["browser"]) end),
@@ -538,7 +554,7 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "Return", function ()
         -- Make sure our X server resource database is up-to-date, that way our
         -- terminal will have the latest settings configured in ~/.Xresources
-        spawn_program("xrdb ~/.Xresources")
+        spawn_program("xrdb /home/sgreenup/.Xresources")
 
         spawn_program(programs["terminal"])
     end),
@@ -555,6 +571,9 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
+    -- Stops ctrl-q from closing Firefox.
+    awful.key({ "" , "Control" }, "q", function () end),
+
     -- Window Control
     awful.key({ modkey,           }, "l", function () awful.tag.incmwfact( 0.03) end),
     awful.key({ modkey,           }, "h", function () awful.tag.incmwfact(-0.03) end),
@@ -566,23 +585,28 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
+    awful.key({ }, "XF86AudioPlay", function () debug_print("play") end),
+    awful.key({ }, "XF86AudioPause", function () debug_print("pause") end),
+    awful.key({ }, "XF86AudioNext", function () debug_print("next") end),
+    awful.key({ }, "XF86AudioPrev", function () debug_print("prev") end),
+
     -- Audio Control
     awful.key({}, "XF86AudioRaiseVolume", function()
-        awful.util.spawn("amixer set Master 10%+")
+        debug_print("up")
     end),
     awful.key({}, "XF86AudioLowerVolume", function()
-        awful.util.spawn("amixer set Master 10%-")
+        debug_print("lower")
     end),
     awful.key({}, "XF86AudioMute", function()
-        awful.util.spawn("amixer sset Master toggle")
+        awful.spawn("amixer sset Master toggle")
     end),
 
     -- Brightness
     awful.key({}, "XF86MonBrightnessUp", function()
-        awful.util.spawn("xbacklight -inc 10")
+        awful.spawn("xbacklight -inc 10")
     end),
     awful.key({}, "XF86MonBrightnessDown", function()
-        awful.util.spawn("xbacklight -dec 10")
+        awful.spawn("xbacklight -dec 10")
     end),
 
     -- DMenu2
@@ -595,7 +619,7 @@ globalkeys = awful.util.table.join(
         command = command .. " " .. tostring(scrgeom.y)
         command = command .. " " .. tostring(scrgeom.width)
         command = command .. " " .. tostring(scrgeom.height)
-        awful.util.spawn(command)
+        awful.spawn(command)
     end)
 )
 
@@ -680,6 +704,7 @@ clientkeys = awful.util.table.join(
         c.maximized_vertical = false
 
         debug_print(
+            "Printing client information" ..
             string.format("window = %s\n", c.window) ..
             string.format("name = %s\n", c.name) ..
             string.format("skip_taskbar = %s\n", tostring(c.skip_taskbar)) ..
@@ -825,20 +850,20 @@ root.keys(globalkeys)
 
 -- moveresize is relative to the current geometry, there was no alternative...
 function client_resize(c, w, h)
-    awful.client.moveresize(0, 0, w - c.width, h - c.height, c)
+    c:relative_move(0, 0, w - c.width, h - c.height)
 end
 
 
 -- moveresize is relative to the current geometry, there was no alternative...
 function client_move(c, x, y)
-    awful.client.moveresize(x - c.x, y - c.y, 0, 0, c)
+    c:relative_move(x - c.x, y - c.y, 0, 0)
 end
 
 
 -- moveresize is relative to the current geometry, there was no alternative...
 function client_move_on_screen(c, x, y)
     g = awful.screen.focused({client=true}).geometry
-    awful.client.moveresize(g.x + (x - c.x), g.y + (y - c.y), 0, 0, c)
+    c:relative_move(g.x + (x - c.x), g.y + (y - c.y), 0, 0)
 end
 
 
@@ -863,6 +888,9 @@ awful.rules.rules = {
             class = {
                 "gimp",
                 "Keepassx2", "keepassx2",
+
+                -- Dialogs in GoLand
+                "sun-awt-X11-XDialogPeer",
             }
         },
         properties = { floating = true }
@@ -872,15 +900,17 @@ awful.rules.rules = {
         rule_any = {
             class = {
                 "Arandr", "arandr",
-                "Pavucontrol", "pavucontrol"
+                "Pavucontrol", "pavucontrol",
+                "blueman-manager", "Blueman-manager",
+                "nitrogen", "Nitrogen",
             }
         },
         properties = { floating = true },
 
         -- TODO make this play nice with larger or smaller resolutions
         callback = function(c)
-            client_move_on_screen(c, 100, 100)
-            client_resize(c, 1280, 720)
+            client_move_on_screen(c, dpi(100), dpi(100))
+            client_resize(c, dpi(1280), dpi(720))
         end
     },
 
